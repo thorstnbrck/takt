@@ -10,17 +10,29 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-  <style>
+    <style>
     /* ==========================================================================
-       CSS Custom Properties (Theme & Farben)
+       Liquid Glass Design System & Theme Variables
        ========================================================================== */
     :root {
-      --bg-gradient-start: #eef2ff;
-      --bg-gradient-end: #fdf4ff;
-      --card-bg: #ffffff;
+      --bg-gradient-start: #e0f2fe;
+      --bg-gradient-end: #ede9fe;
+      
+      /* Liquid Glass Tokens */
+      --glass-bg: rgba(255, 255, 255, 0.68);
+      --glass-bg-hover: rgba(255, 255, 255, 0.85);
+      --glass-bg-solid: #ffffff;
+      --glass-blur: blur(20px) saturate(180%);
+      --glass-blur-sm: blur(10px) saturate(160%);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.85);
+      --glass-border-subtle: 1px solid rgba(255, 255, 255, 0.55);
+      --glass-shadow-sm: 0 4px 16px 0 rgba(31, 38, 135, 0.06), inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+      --glass-shadow: 0 16px 36px 0 rgba(31, 38, 135, 0.08), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95);
+      --glass-shadow-lg: 0 24px 50px 0 rgba(31, 38, 135, 0.12), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.98);
+
       --primary: #4f46e5;
       --primary-hover: #4338ca;
-      --primary-light: #e0e7ff;
+      --primary-light: rgba(99, 102, 241, 0.12);
       --success: #10b981;
       --success-dark: #059669;
       --success-light: #d1fae5;
@@ -28,15 +40,12 @@
       --warning-dark: #d97706;
       --warning-light: #fef3c7;
       --danger: #ef4444;
-      --text-main: #1e293b;
+      --text-main: #0f172a;
       --text-muted: #64748b;
-      --border-color: #cbd5e1;
-      --radius-sm: 10px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 10px 25px -3px rgba(79, 70, 229, 0.08);
-      --shadow-lg: 0 20px 35px -5px rgba(79, 70, 229, 0.12);
+      --border-color: rgba(255, 255, 255, 0.7);
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
       --font-heading: 'Fredoka', cursive, system-ui, sans-serif;
       --font-body: 'Nunito', system-ui, -apple-system, sans-serif;
     }
@@ -50,7 +59,14 @@
 
     body {
       font-family: var(--font-body);
-      background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      background: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.38) 0px, transparent 55%),
+        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.32) 0px, transparent 55%),
+        radial-gradient(at 100% 100%, rgba(244, 114, 182, 0.30) 0px, transparent 55%),
+        radial-gradient(at 0% 100%, rgba(52, 211, 153, 0.30) 0px, transparent 55%),
+        radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.20) 0px, transparent 55%),
+        linear-gradient(135deg, #e0f2fe 0%, #ede9fe 35%, #fdf2f8 70%, #f0fdf4 100%);
+      background-attachment: fixed;
       color: var(--text-main);
       min-height: 100vh;
       padding: 16px 14px 60px;
@@ -58,6 +74,46 @@
       flex-direction: column;
       align-items: center;
       line-height: 1.5;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Flüssige dynamische Hintergrund-Orbs für authentische Glas-Lichtbrechung */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+    body::before {
+      width: 500px;
+      height: 500px;
+      top: -120px;
+      right: -80px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.45), rgba(168, 85, 247, 0.2));
+      animation: floatOrb1 22s ease-in-out infinite alternate;
+    }
+    body::after {
+      width: 540px;
+      height: 540px;
+      bottom: -150px;
+      left: -100px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.4), rgba(236, 72, 153, 0.25));
+      animation: floatOrb2 26s ease-in-out infinite alternate;
+    }
+    @keyframes floatOrb1 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-70px, 90px) scale(1.08); }
+      100% { transform: translate(50px, 160px) scale(0.95); }
+    }
+    @keyframes floatOrb2 {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(90px, -70px) scale(1.12); }
+      100% { transform: translate(-50px, -110px) scale(0.92); }
     }
 
     /* Klick-Wellenanimation (visuelles Klick-Feedback) */
@@ -68,7 +124,7 @@
       z-index: 999999;
       transform: translate(-50%, -50%) scale(0);
       animation: rippleAnim 0.35s ease-out forwards;
-      background: radial-gradient(circle, rgba(79, 70, 229, 0.5) 0%, rgba(99, 102, 241, 0) 70%);
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, rgba(99, 102, 241, 0) 70%);
       width: 50px;
       height: 50px;
     }
@@ -82,17 +138,21 @@
       width: 100%;
       max-width: 880px;
       margin-bottom: 12px;
-      background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+      background: rgba(16, 185, 129, 0.85);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       color: white;
-      padding: 9px 18px;
+      padding: 9px 20px;
       border-radius: var(--radius-sm);
       font-weight: 700;
       font-size: 0.88rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
       transition: background 0.3s;
+      z-index: 1;
     }
     .live-status-info {
       display: flex;
@@ -100,11 +160,12 @@
       gap: 8px;
     }
     .live-status-badge {
-      background: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.24);
       padding: 3px 12px;
       border-radius: 20px;
       font-size: 0.82rem;
       font-weight: 800;
+      border: 1px solid rgba(255, 255, 255, 0.4);
     }
 
     /* Confetti Canvas */
@@ -129,18 +190,20 @@
       z-index: 1;
     }
 
-    /* Kopfbereich */
+    /* Liquid Glass Kopfbereich */
     .app-header {
-      background: var(--card-bg);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       border-radius: var(--radius-lg);
       padding: 18px 26px;
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--glass-shadow);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 16px;
-      border: 2px solid rgba(224, 231, 255, 0.8);
+      border: var(--glass-border);
     }
 
     .brand {
@@ -151,14 +214,17 @@
 
     .brand-icon {
       font-size: 2.4rem;
-      background: var(--primary-light);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
+      border: 1px solid rgba(255, 255, 255, 0.9);
       width: 54px;
       height: 54px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15);
       animation: floatIcon 3s ease-in-out infinite;
     }
 
@@ -192,12 +258,15 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      background: #f8fafc;
-      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
+      padding: 8px 16px;
       border-radius: 30px;
-      border: 1.5px solid #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.9);
       font-weight: 700;
       font-size: 0.95rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
     }
 
     .star-icon {
@@ -209,18 +278,23 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      background: #fffbeb;
-      padding: 8px 14px;
+      background: rgba(254, 243, 199, 0.75);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
+      padding: 8px 16px;
       border-radius: 30px;
-      border: 1.5px solid #fde68a;
+      border: 1px solid rgba(253, 230, 138, 0.9);
       font-weight: 700;
       font-size: 0.95rem;
       color: #b45309;
+      box-shadow: 0 2px 10px rgba(245, 158, 11, 0.12);
     }
 
     .audio-toggle-btn {
-      background: #f1f5f9;
-      border: 1.5px solid #cbd5e1;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
+      border: 1px solid rgba(255, 255, 255, 0.9);
       width: 42px;
       height: 42px;
       border-radius: 50%;
@@ -229,25 +303,29 @@
       justify-content: center;
       cursor: pointer;
       font-size: 1.25rem;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     .audio-toggle-btn:hover {
-      background: var(--primary-light);
+      background: rgba(255, 255, 255, 0.95);
       border-color: var(--primary);
       transform: scale(1.08);
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.2);
     }
 
-    /* Taktart-Auswahl */
+    /* Liquid Glass Taktart-Auswahl */
     .meter-selector-card {
-      background: var(--card-bg);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       border-radius: var(--radius-md);
-      padding: 14px 18px;
-      box-shadow: var(--shadow-sm);
-      border: 2px solid #e0e7ff;
+      padding: 16px 20px;
+      box-shadow: var(--glass-shadow);
+      border: var(--glass-border);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .meter-selector-title {
@@ -263,12 +341,14 @@
     .meter-buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 12px;
     }
 
     .meter-btn {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
       border-radius: var(--radius-md);
       padding: 10px 14px;
       cursor: pointer;
@@ -278,14 +358,14 @@
       text-align: left;
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       user-select: none;
-      box-shadow: var(--shadow-sm);
+      box-shadow: var(--glass-shadow-sm);
     }
 
     .meter-btn:hover {
       transform: translateY(-2px);
-      border-color: var(--primary);
-      background: #f8fafc;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+      border-color: rgba(99, 102, 241, 0.5);
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.12);
     }
 
     .meter-btn:active {
@@ -294,8 +374,8 @@
 
     .meter-btn.active {
       border-color: var(--primary);
-      background: #eef2ff;
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.22);
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25), 0 8px 22px rgba(99, 102, 241, 0.16);
     }
 
     .meter-fraction-box {
@@ -307,19 +387,21 @@
       font-size: 1.25rem;
       font-weight: 700;
       line-height: 0.95;
-      background: #f1f5f9;
+      background: rgba(241, 245, 249, 0.8);
       width: 38px;
       height: 44px;
       border-radius: 8px;
-      border: 1px solid #cbd5e1;
+      border: 1px solid rgba(203, 213, 225, 0.8);
       color: var(--text-main);
       flex-shrink: 0;
+      transition: all 0.2s;
     }
 
     .meter-btn.active .meter-fraction-box {
       background: var(--primary);
       color: white;
       border-color: var(--primary-hover);
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
     }
 
     .meter-btn-text {
@@ -341,13 +423,16 @@
       margin-top: 2px;
     }
 
-    /* Anleitungs-Banner */
+    /* Liquid Glass Anleitungs-Banner */
     .instruction-card {
-      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.88) 0%, rgba(99, 102, 241, 0.85) 100%);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       color: white;
       border-radius: var(--radius-lg);
       padding: 22px 28px;
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 16px 36px rgba(79, 70, 229, 0.25), inset 0 1px 1.5px rgba(255, 255, 255, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.35);
       position: relative;
       overflow: hidden;
     }
@@ -371,6 +456,7 @@
       line-height: 1.25;
       position: relative;
       z-index: 1;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .instruction-card p {
@@ -391,8 +477,9 @@
     }
 
     .instruction-step {
-      background: rgba(255, 255, 255, 0.16);
-      backdrop-filter: blur(4px);
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       padding: 6px 14px;
       border-radius: 20px;
       font-size: 0.88rem;
@@ -400,16 +487,20 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.35);
     }
 
-    /* Schwierigkeitsstufen */
+    /* Liquid Glass Schwierigkeitsstufen */
     .level-tabs {
       display: flex;
       gap: 8px;
-      background: #e2e8f0;
-      padding: 4px;
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      padding: 6px;
       border-radius: var(--radius-md);
+      border: var(--glass-border);
+      box-shadow: var(--glass-shadow-sm);
       overflow-x: auto;
     }
 
@@ -425,40 +516,42 @@
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       white-space: nowrap;
       text-align: center;
     }
 
     .level-tab:hover {
       color: var(--primary);
-      background: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.65);
     }
 
     .level-tab.active {
-      background: #ffffff;
+      background: rgba(255, 255, 255, 0.95);
       color: var(--primary);
       font-weight: 700;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 1px white;
     }
 
-    /* Notenblatt-Hauptbereich */
+    /* Liquid Glass Notenblatt-Hauptbereich */
     .score-card {
-      background: var(--card-bg);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       border-radius: var(--radius-lg);
       padding: 24px;
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--glass-shadow-lg);
       display: flex;
       flex-direction: column;
       gap: 18px;
-      border: 2px solid #e0e7ff;
+      border: var(--glass-border);
     }
 
     .score-card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px dashed #f1f5f9;
+      border-bottom: 1.5px dashed rgba(148, 163, 184, 0.25);
       padding-bottom: 12px;
     }
 
@@ -475,15 +568,18 @@
     .missing-info {
       font-size: 0.95rem;
       font-weight: 700;
-      color: #6366f1;
-      background: #eef2ff;
-      padding: 4px 12px;
+      color: #0284c7;
+      background: rgba(2, 132, 199, 0.1);
+      border: 1px solid rgba(2, 132, 199, 0.2);
+      padding: 4px 14px;
       border-radius: 20px;
     }
 
     .sheet-wrapper {
       width: 100%;
-      background: #ffffff;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: var(--radius-md);
       padding: 10px 0;
       overflow-x: auto;
@@ -492,6 +588,8 @@
       flex-direction: column;
       align-items: center;
       position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     }
 
     #notation-container {
@@ -511,54 +609,54 @@
       cursor: pointer;
     }
 
-    /* Klickbare Zielzonen im SVG */
+    /* Klickbare Zielzonen im SVG - KEINE lila Färbung mehr! */
     .barline-slot {
       cursor: pointer !important;
       outline: none;
     }
 
     .barline-slot .slot-hitbox {
-      fill: rgba(79, 70, 229, 0.001) !important;
+      fill: transparent !important;
       cursor: pointer !important;
-      transition: fill 0.15s ease;
+      transition: none;
     }
 
     .barline-slot:hover .slot-hitbox {
-      fill: rgba(79, 70, 229, 0.16) !important;
+      fill: transparent !important; /* Absolut keine Farbfläche bei Hover! */
     }
 
     .barline-slot .slot-guide {
-      stroke: #818cf8;
-      stroke-width: 3.5;
+      stroke: #94a3b8;
+      stroke-width: 2.5;
       stroke-dasharray: 4, 4;
-      opacity: 0.4;
-      transition: all 0.2s ease;
+      opacity: 0.35;
+      transition: all 0.18s ease;
       pointer-events: none;
     }
 
     .barline-slot:hover .slot-guide {
-      stroke: #4f46e5;
-      stroke-dasharray: 6, 2;
-      stroke-width: 4;
-      opacity: 1;
-      filter: drop-shadow(0 0 6px rgba(79, 70, 229, 0.6));
+      stroke: #0f172a; /* Seriöser, klarer Taktstrich-Vorschau-Strich in Noten-Schwarz */
+      stroke-width: 3.5;
+      stroke-dasharray: none; /* Durchgezogener echter Taktstrich bei Hover */
+      opacity: 0.9;
+      filter: none; /* Kein lila Halo/Glow mehr! */
     }
 
     /* Verhindert Hover-Flackern beim Aufgabenwechsel */
     .suppress-hover .barline-slot:hover .slot-hitbox {
-      fill: rgba(79, 70, 229, 0.001) !important;
+      fill: transparent !important;
     }
     .suppress-hover .barline-slot:hover .slot-guide {
-      stroke: #818cf8 !important;
+      stroke: #94a3b8 !important;
       stroke-dasharray: 4, 4 !important;
-      stroke-width: 3.5 !important;
-      opacity: 0.4 !important;
+      stroke-width: 2.5 !important;
+      opacity: 0.35 !important;
       filter: none !important;
     }
     .suppress-hover .slot-pill-btn:hover {
-      background: white !important;
-      color: #4338ca !important;
-      border-color: #818cf8 !important;
+      background: rgba(255, 255, 255, 0.85) !important;
+      color: #334155 !important;
+      border-color: rgba(148, 163, 184, 0.6) !important;
       transform: translateX(-50%) !important;
       box-shadow: none !important;
     }
@@ -576,27 +674,30 @@
     }
 
     .placed-barline {
-      stroke: #1e293b;
+      stroke: #0f172a;
       stroke-width: 3.5;
       stroke-linecap: square;
       animation: barlineDrop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-      pointer-events: none;
     }
 
     @keyframes barlineDrop {
       0% {
-        stroke-dasharray: 80;
-        stroke-dashoffset: 80;
         opacity: 0;
+        stroke-width: 8;
+        transform: translateY(-20px);
+      }
+      70% {
+        stroke-width: 4;
+        transform: translateY(2px);
       }
       100% {
-        stroke-dasharray: 80;
-        stroke-dashoffset: 0;
         opacity: 1;
+        stroke-width: 3.5;
+        transform: translateY(0);
       }
     }
 
-    /* Klickbare Pill-Buttons direkt unter der Notenzeile */
+    /* Klick-Pills unter der Notenzeile */
     .slot-buttons-row {
       width: 100%;
       min-width: 680px;
@@ -612,26 +713,30 @@
     .slot-pill-btn {
       position: absolute;
       transform: translateX(-50%);
-      background: #eef2ff;
-      border: 1.5px solid #818cf8;
-      color: #4338ca;
+      bottom: 8px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(148, 163, 184, 0.6);
+      color: #334155;
       font-family: var(--font-heading);
       font-size: 0.85rem;
       font-weight: 700;
       padding: 5px 12px;
       border-radius: 14px;
       cursor: pointer !important;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       white-space: nowrap;
       z-index: 5;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
     }
 
     .slot-pill-btn:hover {
-      background: #4f46e5;
+      background: #0f172a;
       color: white;
-      border-color: #4338ca;
+      border-color: #0f172a;
       transform: translateX(-50%) translateY(-2px);
-      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
     }
 
     .slot-pill-btn:active {
@@ -643,7 +748,7 @@
       color: white;
       border-color: #059669;
       cursor: default !important;
-      box-shadow: none;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
     }
 
     /* Zähl-Chips unter den Noten */
@@ -654,13 +759,14 @@
       justify-content: space-around;
       align-items: center;
       padding: 4px 40px;
-      background: #f8fafc;
+      background: rgba(241, 245, 249, 0.6);
       border-radius: var(--radius-sm);
       margin-top: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
     }
 
     .beat-chip {
-      background: #e2e8f0;
+      background: rgba(255, 255, 255, 0.85);
       color: #334155;
       font-family: var(--font-heading);
       font-size: 0.88rem;
@@ -670,13 +776,16 @@
       transition: all 0.2s;
       min-width: 32px;
       text-align: center;
+      border: 1px solid rgba(203, 213, 225, 0.6);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
     }
 
     .beat-chip.active-beat {
-      background: #6366f1;
+      background: #0284c7;
       color: white;
       transform: scale(1.15);
-      box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+      box-shadow: 0 0 12px rgba(2, 132, 199, 0.45);
+      border-color: #0284c7;
     }
 
     .note-element {
@@ -685,11 +794,11 @@
 
     .note-element.note-highlight ellipse,
     .note-element.note-highlight text {
-      fill: #4f46e5 !important;
-      filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.8));
+      fill: #0284c7 !important;
+      filter: drop-shadow(0 0 8px rgba(2, 132, 199, 0.7));
     }
 
-    /* Feedback Banner */
+    /* Liquid Glass Feedback Banner */
     .feedback-banner {
       border-radius: var(--radius-md);
       padding: 14px 20px;
@@ -699,18 +808,22 @@
       font-size: 1.05rem;
       font-weight: 600;
       transition: all 0.25s ease;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
     .feedback-banner.neutral {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.85);
       color: #334155;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
     }
 
     .feedback-banner.success {
-      background: #d1fae5;
-      border: 2px solid #34d399;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1.5px solid rgba(16, 185, 129, 0.4);
       color: #065f46;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
       animation: popSuccess 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
@@ -721,9 +834,10 @@
     }
 
     .feedback-banner.warning {
-      background: #fef3c7;
-      border: 2px solid #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1.5px solid rgba(245, 158, 11, 0.4);
       color: #92400e;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.12);
       animation: shakeWarning 0.35s ease-in-out;
     }
 
@@ -755,7 +869,7 @@
       opacity: 0.95;
     }
 
-    /* Steuerungs-Buttons */
+    /* Liquid Glass Steuerungs-Buttons */
     .controls-row {
       display: flex;
       flex-wrap: wrap;
@@ -787,38 +901,48 @@
     }
 
     .btn-secondary {
-      background: #f1f5f9;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
       color: #334155;
-      border: 2px solid #cbd5e1;
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     }
 
     .btn-secondary:hover {
-      background: #e2e8f0;
-      color: #1e293b;
+      background: rgba(255, 255, 255, 0.92);
+      color: #0f172a;
       transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+      border-color: rgba(99, 102, 241, 0.4);
     }
 
     .btn-audio {
-      background: #ecfdf5;
+      background: rgba(16, 185, 129, 0.12);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
       color: #065f46;
-      border: 2px solid #a7f3d0;
+      border: 1.5px solid rgba(16, 185, 129, 0.35);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);
     }
 
     .btn-audio:hover {
-      background: #d1fae5;
+      background: rgba(16, 185, 129, 0.22);
       transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(16, 185, 129, 0.18);
     }
 
     .btn-primary {
-      background: var(--primary);
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
       color: white;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
     }
 
     .btn-primary:hover {
-      background: var(--primary-hover);
+      background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+      box-shadow: 0 12px 28px rgba(79, 70, 229, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5);
     }
 
     .btn-primary.pulse {
@@ -831,13 +955,15 @@
       100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
     }
 
-    /* Noten-Spickzettel & Baukasten */
+    /* Liquid Glass Noten-Spickzettel & Baukasten */
     .cheat-sheet-card {
-      background: var(--card-bg);
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
       border-radius: var(--radius-lg);
       padding: 24px;
-      box-shadow: var(--shadow-md);
-      border: 2px solid #e0e7ff;
+      box-shadow: var(--glass-shadow);
+      border: var(--glass-border);
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -847,7 +973,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px solid #f1f5f9;
+      border-bottom: 1.5px dashed rgba(148, 163, 184, 0.25);
       padding-bottom: 12px;
     }
 
@@ -862,9 +988,10 @@
     }
 
     .cheat-sheet-tag {
-      background: #eef2ff;
+      background: rgba(99, 102, 241, 0.12);
       color: var(--primary);
-      padding: 4px 12px;
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      padding: 4px 14px;
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 700;
@@ -877,8 +1004,10 @@
     }
 
     .note-card {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
       border-radius: var(--radius-md);
       padding: 14px 10px;
       display: flex;
@@ -888,18 +1017,20 @@
       gap: 4px;
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
+      box-shadow: var(--glass-shadow-sm);
     }
 
     .note-card:hover {
       transform: translateY(-3px);
-      border-color: var(--primary);
-      box-shadow: var(--shadow-sm);
-      background: #ffffff;
+      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.1);
+      background: rgba(255, 255, 255, 0.9);
     }
 
     .note-card.highlight-note {
-      border-color: #6366f1;
-      background: #eef2ff;
+      border-color: rgba(99, 102, 241, 0.6);
+      background: rgba(238, 242, 255, 0.85);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
     }
 
     .note-card-symbol {
@@ -926,6 +1057,7 @@
       padding: 2px 10px;
       border-radius: 12px;
       margin-top: 2px;
+      border: 1px solid rgba(99, 102, 241, 0.2);
     }
 
     .note-card-desc {
@@ -937,8 +1069,10 @@
 
     /* Interaktiver Takt-Baukasten */
     .sandbox-box {
-      background: #f8fafc;
-      border: 2px dashed #cbd5e1;
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
+      border: 2px dashed rgba(148, 163, 184, 0.45);
       border-radius: var(--radius-md);
       padding: 16px;
       display: flex;
@@ -962,8 +1096,8 @@
     .beat-measure-bar {
       width: 100%;
       height: 46px;
-      background: #ffffff;
-      border: 2px solid #94a3b8;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid rgba(148, 163, 184, 0.6);
       border-radius: var(--radius-sm);
       display: flex;
       overflow: hidden;
@@ -1001,23 +1135,27 @@
     }
 
     .sandbox-chip-btn {
-      background: #ffffff;
-      border: 1.5px solid #cbd5e1;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
+      border: 1.5px solid rgba(255, 255, 255, 0.95);
       border-radius: 20px;
       padding: 6px 14px;
       font-family: var(--font-heading);
       font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     .sandbox-chip-btn:hover {
       border-color: var(--primary);
-      background: var(--primary-light);
+      background: rgba(255, 255, 255, 0.95);
       color: var(--primary);
       transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
     }
 
     .sandbox-chip-btn:active {
@@ -1031,7 +1169,7 @@
       margin-top: 6px;
     }
 
-    /* Modal Overlay */
+    /* Liquid Glass Modal Overlay */
     .modal-overlay {
       display: none !important;
       position: fixed;
@@ -1039,7 +1177,9 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       align-items: center;
       justify-content: center;
       z-index: 10000;
@@ -1051,15 +1191,17 @@
     }
 
     .modal-card {
-      background: white;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
       border-radius: var(--radius-lg);
       padding: 36px 30px;
       max-width: 440px;
       width: 100%;
       text-align: center;
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2), inset 0 1.5px 2px white;
       animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      border: 3px solid #818cf8;
+      border: 1.5px solid rgba(255, 255, 255, 0.95);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1114,6 +1256,343 @@
         font-size: 0.95rem;
       }
     }
+
+    /* ==========================================================================
+       Liquid Glass Prüfungs-Modus Styles
+       ========================================================================== */
+    .exam-banner-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      box-shadow: var(--glass-shadow-lg);
+      border: var(--glass-border);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-top: 10px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(254, 243, 199, 0.5) 100%);
+    }
+
+    .exam-banner-content {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      max-width: 540px;
+    }
+
+    .exam-banner-icon {
+      font-size: 3rem;
+      line-height: 1;
+      filter: drop-shadow(0 4px 10px rgba(245, 158, 11, 0.3));
+    }
+
+    .exam-banner-text h3 {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .exam-banner-text p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .btn-exam {
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+      color: white;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 14px 28px;
+      box-shadow: 0 8px 24px rgba(234, 88, 12, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+    }
+
+    .btn-exam:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(234, 88, 12, 0.4);
+      background: linear-gradient(135deg, #d97706 0%, #c2410c 100%);
+    }
+
+    .btn-exam:active {
+      transform: scale(0.98);
+    }
+
+    /* Vollbild Prüfungs-Container */
+    #exam-container {
+      width: 100%;
+      max-width: 880px;
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+      z-index: 1;
+      animation: fadeInExam 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes fadeInExam {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .exam-header {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: var(--radius-lg);
+      padding: 18px 26px;
+      box-shadow: var(--glass-shadow);
+      border: var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .exam-progress-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: var(--radius-md);
+      padding: 16px 22px;
+      box-shadow: var(--glass-shadow-sm);
+      border: var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .exam-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .exam-meter-badge {
+      background: rgba(79, 70, 229, 0.12);
+      color: var(--primary);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      border: 1px solid rgba(79, 70, 229, 0.25);
+    }
+
+    .exam-progress-bar-bg {
+      width: 100%;
+      height: 12px;
+      background: rgba(226, 232, 240, 0.7);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .exam-progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f59e0b 0%, #10b981 100%);
+      border-radius: 8px;
+      transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    }
+
+    .exam-question-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--glass-shadow-lg);
+      border: var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .exam-question-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px dashed rgba(148, 163, 184, 0.25);
+      padding-bottom: 12px;
+    }
+
+    .exam-question-title h2 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .exam-target-info {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #b45309;
+      background: rgba(254, 243, 199, 0.8);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 14px;
+      border-radius: 20px;
+    }
+
+    .exam-score-wrapper {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--radius-md);
+      padding: 14px 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .exam-actions-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .exam-hint-text {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .btn-submit-answer {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 12px 26px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-submit-answer:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none !important;
+      background: #94a3b8;
+      border-color: transparent;
+    }
+
+    .btn-submit-answer:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Zeugnis / Prüfungs-Ergebnis Card */
+    .exam-results-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-radius: var(--radius-lg);
+      padding: 36px 30px;
+      box-shadow: var(--glass-shadow-lg);
+      border: var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 22px;
+      animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .exam-certificate-badge {
+      background: linear-gradient(135deg, rgba(254, 243, 199, 0.9) 0%, rgba(253, 230, 138, 0.85) 100%);
+      border: 2px solid #f59e0b;
+      padding: 20px 36px;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.25);
+    }
+
+    .exam-grade-text {
+      font-family: var(--font-heading);
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: #92400e;
+      line-height: 1;
+    }
+
+    .exam-score-text {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #b45309;
+    }
+
+    .exam-review-container {
+      width: 100%;
+      text-align: left;
+    }
+
+    .exam-review-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .exam-review-item {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: var(--glass-blur-sm);
+      -webkit-backdrop-filter: var(--glass-blur-sm);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    }
+
+    .exam-review-item.correct {
+      border-left: 6px solid #10b981;
+    }
+
+    .exam-review-item.incorrect {
+      border-left: 6px solid #ef4444;
+    }
+
   </style>
 </head>
 <body>
@@ -1356,6 +1835,107 @@
         <div class="sandbox-status" id="sandbox-status-text">
           Aktuell: 0 Schläge gefüllt. Klicke auf die Bausteine oben!
         </div>
+      </div>
+    </section>
+
+    <!-- Prüfungs-Banner ganz unten -->
+    <section class="exam-banner-card" aria-label="Zur Takt-Prüfung">
+      <div class="exam-banner-content">
+        <span class="exam-banner-icon">🎓</span>
+        <div class="exam-banner-text">
+          <h3>Bereit für die Takt-Prüfung?</h3>
+          <p>10 zufällige Aufgaben wie in einer echten Klassenarbeit – ganz ohne Spickzettel und Rechenhilfen! Kannst du die Note 1 schaffen?</p>
+        </div>
+      </div>
+      <button id="open-exam-btn" class="btn btn-exam">
+        <span>📝 Prüfung jetzt starten</span> 🚀
+      </button>
+    </section>
+  </div>
+
+
+  <!-- ==========================================================================
+       Prüfungsseite: 10 Aufgaben Klassenarbeit ohne Hilfen
+       ========================================================================== -->
+  <div id="exam-container" class="exam-container" style="display: none;">
+    
+    <!-- Prüfungs-Kopfzeile -->
+    <header class="exam-header">
+      <div class="brand">
+        <div class="brand-icon">🎓</div>
+        <div>
+          <h1 class="brand-title">Takt-Prüfung</h1>
+          <p class="brand-subtitle">10 Aufgaben – Wie in der Klassenarbeit (ohne Hilfen)</p>
+        </div>
+      </div>
+      <button id="exit-exam-btn" class="btn btn-secondary">
+        <span>🏠</span> Zurück zum Üben
+      </button>
+    </header>
+
+    <!-- Prüfungs-Fortschritt & Status -->
+    <div class="exam-progress-card">
+      <div class="exam-progress-header">
+        <span id="exam-progress-text">Aufgabe 1 von 10</span>
+        <span id="exam-meter-badge" class="exam-meter-badge">4/4-Takt</span>
+      </div>
+      <div class="exam-progress-bar-bg">
+        <div id="exam-progress-bar-fill" class="exam-progress-bar-fill" style="width: 10%;"></div>
+      </div>
+    </div>
+
+    <!-- Prüfungs-Aufgabe -->
+    <main class="exam-question-card" id="exam-question-card">
+      <div class="exam-question-title">
+        <h2 id="exam-instruction-title">🎯 Setze den Taktstrich für den 4/4-Takt:</h2>
+        <span id="exam-target-info" class="exam-target-info">📍 1 Taktstrich fehlt!</span>
+      </div>
+
+      <div class="exam-score-wrapper">
+        <div id="exam-notation-container" style="width: 100%; min-width: 680px; height: 190px; display: flex; justify-content: center; align-items: center; position: relative;">
+          <!-- SVG Notenzeile -->
+        </div>
+        <div class="slot-buttons-row" id="exam-slot-buttons-row">
+          <!-- Klick-Buttons unter den Noten -->
+        </div>
+      </div>
+
+      <div class="exam-actions-bar">
+        <span class="exam-hint-text" id="exam-action-hint">💡 Klicke auf die Notenlinien dorthin, wo der Taktstrich hingehört.</span>
+        <button id="exam-submit-btn" class="btn btn-submit-answer" disabled>
+          <span>Antwort abgeben</span> ➡️
+        </button>
+      </div>
+    </main>
+
+    <!-- Prüfungs-Ergebnis / Zeugnis (am Ende der 10 Aufgaben sichtbar) -->
+    <section class="exam-results-card" id="exam-results-card" style="display: none;">
+      <div class="exam-certificate-badge">
+        <div style="font-size: 3.5rem;">📜</div>
+        <h2 style="font-family: var(--font-heading); font-size: 1.8rem; color: #78350f;">Prüfungs-Zeugnis</h2>
+        <div class="exam-grade-text" id="exam-final-grade">Note 1</div>
+        <div class="exam-score-text" id="exam-final-score">10 von 10 Punkten richtig (100%)</div>
+      </div>
+
+      <p id="exam-feedback-message" style="font-size: 1.1rem; color: var(--text-main); max-width: 600px; font-weight: 600;">
+        Hervorragende Leistung! Du beherrschst die Taktarten perfekt und bist eine echte Takt-Meisterin!
+      </p>
+
+      <!-- Detaillierte Übersicht aller 10 Aufgaben -->
+      <div class="exam-review-container">
+        <h3 style="font-family: var(--font-heading); margin-bottom: 8px;">Deine Aufgaben im Überblick:</h3>
+        <div class="exam-review-list" id="exam-review-list">
+          <!-- Liste der 10 Aufgaben mit Häkchen/Kreuz -->
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+        <button id="exam-restart-btn" class="btn btn-exam">
+          <span>🔄 Neue Prüfung starten</span> (10 neue Aufgaben)
+        </button>
+        <button id="exam-back-to-practice-btn" class="btn btn-secondary">
+          <span>🏠</span> Zurück zum Übungs-Modus
+        </button>
       </div>
     </section>
 
@@ -2617,7 +3197,7 @@
       renderBeatLabels(noteCoordinates);
     }
 
-    function renderScoreSVG(container, exercise, width, height, yTop, yBottom) {
+    function renderScoreSVG(container, exercise, width, height, yTop, yBottom, meter) {
       container.innerHTML = '';
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       svg.setAttribute('width', width);
@@ -2661,7 +3241,7 @@
       svg.appendChild(clef);
 
       // Taktart Ziffern
-      const parts = state.currentMeter.split('/');
+      const parts = (meter || exercise.meter || state.currentMeter || '4/4').split('/');
       const num = parts[0];
       const den = parts[1];
 
@@ -2862,7 +3442,7 @@
           hitbox.setAttribute('width', 56);
           hitbox.setAttribute('height', (yBottom - yTop) + 70);
           hitbox.setAttribute('rx', '8');
-          hitbox.setAttribute('fill', 'rgba(79, 70, 229, 0.001)');
+          hitbox.setAttribute('fill', 'rgba(0, 0, 0, 0.001)');
           hitbox.setAttribute('style', 'cursor: pointer;');
           slotG.appendChild(hitbox);
 
@@ -2896,6 +3476,379 @@
        Globale Aktionen (Auf window verfügbar)
        ========================================================================== */
 
+
+    /* ==========================================================================
+       Prüfungs-Modus Logik (10 zufällige Aufgaben ohne Hilfen)
+       ========================================================================== */
+    const examState = {
+      tasks: [],
+      currentIndex: 0,
+      answers: [],
+      userPlaced: new Set(),
+      slotPositions: [],
+      score: 0
+    };
+
+    function generateExamPool() {
+      const pool = [];
+      const meters = ['4/4', '3/4', '2/4', '6/8'];
+
+      meters.forEach(function (m) {
+        const meterCfg = EXERCISE_CATALOG[m];
+        if (!meterCfg) return;
+        [1, 2, 3, 4].forEach(function (lvl) {
+          const list = meterCfg.levels[lvl] || [];
+          list.forEach(function (ex, idx) {
+            pool.push({
+              ...ex,
+              meter: m,
+              level: lvl,
+              id: m + '-L' + lvl + '-' + idx,
+              targetBeats: ex.targetBeats || [meterCfg.beatsPerMeasure]
+            });
+          });
+        });
+      });
+
+      // Fisher-Yates Shuffle
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = pool[i];
+        pool[i] = pool[j];
+        pool[j] = temp;
+      }
+
+      // Wähle 10 abwechslungsreiche Aufgaben
+      return pool.slice(0, 10);
+    }
+
+    window.startExam = function () {
+      stopRhythm();
+      const appCont = document.querySelector('.app-container');
+      const examCont = document.getElementById('exam-container');
+      if (appCont) appCont.style.display = 'none';
+      if (examCont) examCont.style.display = 'flex';
+
+      const qCard = document.getElementById('exam-question-card');
+      const rCard = document.getElementById('exam-results-card');
+      if (qCard) qCard.style.display = 'flex';
+      if (rCard) rCard.style.display = 'none';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      examState.tasks = generateExamPool();
+      examState.currentIndex = 0;
+      examState.answers = [];
+      examState.score = 0;
+      examState.userPlaced.clear();
+
+      loadExamTask(0);
+    };
+
+    window.exitExam = function () {
+      if (examState.currentIndex > 0 && examState.currentIndex < 9 && document.getElementById('exam-question-card').style.display !== 'none') {
+        if (!confirm('Möchtest du die Prüfung wirklich abbrechen? Dein bisheriger Fortschritt geht verloren.')) {
+          return;
+        }
+      }
+      const appCont = document.querySelector('.app-container');
+      const examCont = document.getElementById('exam-container');
+      if (examCont) examCont.style.display = 'none';
+      if (appCont) appCont.style.display = 'flex';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderScore();
+    };
+
+    function loadExamTask(index) {
+      examState.currentIndex = index;
+      examState.userPlaced.clear();
+
+      const task = examState.tasks[index];
+      const maxBarlines = (task.targetBeats && task.targetBeats.length > 1) ? task.targetBeats.length : 1;
+
+      const pText = document.getElementById('exam-progress-text');
+      if (pText) pText.textContent = 'Aufgabe ' + (index + 1) + ' von 10';
+
+      const pFill = document.getElementById('exam-progress-bar-fill');
+      if (pFill) pFill.style.width = (((index + 1) / 10) * 100) + '%';
+
+      const mBadge = document.getElementById('exam-meter-badge');
+      if (mBadge) mBadge.textContent = task.meter + '-Takt';
+
+      const tTitle = document.getElementById('exam-instruction-title');
+      if (tTitle) tTitle.textContent = '🎯 Setze den Taktstrich für den ' + task.meter + '-Takt:';
+
+      const tInfo = document.getElementById('exam-target-info');
+      if (tInfo) tInfo.textContent = maxBarlines > 1 ? '📍 2 Taktstriche fehlen!' : '📍 1 Taktstrich fehlt!';
+
+      const submitBtn = document.getElementById('exam-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = (index === 9) ? '<span>Prüfung abgeben</span> 🏁' : '<span>Antwort abgeben</span> ➡️';
+      }
+
+      const container = document.getElementById('exam-notation-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const width = Math.max(container.clientWidth || 720, 700);
+      const height = 180;
+      const staveYTop = 45;
+      const staveYBottom = 85;
+
+      const noteCoords = renderScoreSVG(container, task, width, height, staveYTop, staveYBottom, task.meter);
+      attachExamInteractiveSlots(container, task, noteCoords, staveYTop, staveYBottom, width, height);
+    }
+
+    function attachExamInteractiveSlots(container, task, noteCoords, yTop, yBottom, svgWidth, svgHeight) {
+      const svg = container.querySelector('svg');
+      if (!svg || noteCoords.length < 2) return;
+
+      const interactionGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      interactionGroup.setAttribute('id', 'exam-slots-layer');
+
+      const pillContainer = document.getElementById('exam-slot-buttons-row');
+      if (pillContainer) pillContainer.innerHTML = '';
+
+      examState.slotPositions = [];
+
+      for (let i = 0; i < noteCoords.length - 1; i++) {
+        const xMid = (noteCoords[i] + noteCoords[i + 1]) / 2;
+        examState.slotPositions[i] = xMid;
+        const isPlaced = examState.userPlaced.has(i);
+
+        // Clickable slot group in SVG
+        const slotG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        slotG.setAttribute('class', 'barline-slot' + (isPlaced ? ' placed-slot' : ''));
+        slotG.setAttribute('tabindex', '0');
+        slotG.setAttribute('role', 'button');
+        slotG.setAttribute('data-slot-index', i);
+        slotG.setAttribute('aria-label', 'Taktstrich nach Note ' + (i + 1) + ' setzen');
+
+        // Hitbox
+        const hitbox = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        hitbox.setAttribute('class', 'slot-hitbox');
+        hitbox.setAttribute('x', xMid - 28);
+        hitbox.setAttribute('y', yTop - 35);
+        hitbox.setAttribute('width', 56);
+        hitbox.setAttribute('height', (yBottom - yTop) + 70);
+        hitbox.setAttribute('rx', '8');
+        hitbox.setAttribute('fill', 'rgba(0, 0, 0, 0.001)');
+        hitbox.setAttribute('style', 'cursor: pointer;');
+        slotG.appendChild(hitbox);
+
+        if (isPlaced) {
+          // Placed solid barline
+          const placedLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          placedLine.setAttribute('class', 'placed-barline');
+          placedLine.setAttribute('x1', xMid);
+          placedLine.setAttribute('y1', yTop);
+          placedLine.setAttribute('x2', xMid);
+          placedLine.setAttribute('y2', yBottom);
+          slotG.appendChild(placedLine);
+
+          if (pillContainer) {
+            const pillBtn = document.createElement('button');
+            pillBtn.className = 'slot-pill-btn placed';
+            pillBtn.style.left = xMid + 'px';
+            pillBtn.setAttribute('data-slot-index', i);
+            pillBtn.textContent = '✓ Dein Taktstrich';
+            pillContainer.appendChild(pillBtn);
+          }
+        } else {
+          // Guide line
+          const guideLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          guideLine.setAttribute('class', 'slot-guide');
+          guideLine.setAttribute('x1', xMid);
+          guideLine.setAttribute('y1', yTop);
+          guideLine.setAttribute('x2', xMid);
+          guideLine.setAttribute('y2', yBottom);
+          slotG.appendChild(guideLine);
+
+          if (pillContainer) {
+            const pillBtn = document.createElement('button');
+            pillBtn.className = 'slot-pill-btn';
+            pillBtn.style.left = xMid + 'px';
+            pillBtn.setAttribute('data-slot-index', i);
+            pillBtn.textContent = '➕ Hier';
+            pillContainer.appendChild(pillBtn);
+          }
+        }
+
+        interactionGroup.appendChild(slotG);
+      }
+
+      svg.appendChild(interactionGroup);
+    }
+
+    window.handleExamSlotClick = function (slotIndex) {
+      if (!examState.tasks || examState.tasks.length === 0) return;
+      const task = examState.tasks[examState.currentIndex];
+      if (!task) return;
+      const maxBarlines = (task.targetBeats && task.targetBeats.length > 1) ? task.targetBeats.length : 1;
+
+      if (maxBarlines === 1) {
+        examState.userPlaced.clear();
+        examState.userPlaced.add(slotIndex);
+      } else {
+        if (examState.userPlaced.has(slotIndex)) {
+          examState.userPlaced.delete(slotIndex);
+        } else {
+          if (examState.userPlaced.size >= maxBarlines) {
+            const first = examState.userPlaced.values().next().value;
+            examState.userPlaced.delete(first);
+          }
+          examState.userPlaced.add(slotIndex);
+        }
+      }
+
+      if (state.soundEnabled) {
+        playTone(520, 0.08, 'sine', 0.15);
+      }
+
+      const container = document.getElementById('exam-notation-container');
+      if (!container) return;
+      const width = Math.max(container.clientWidth || 720, 700);
+      const height = 180;
+      const staveYTop = 45;
+      const staveYBottom = 85;
+
+      const noteCoords = renderScoreSVG(container, task, width, height, staveYTop, staveYBottom, task.meter);
+      attachExamInteractiveSlots(container, task, noteCoords, staveYTop, staveYBottom, width, height);
+
+      const submitBtn = document.getElementById('exam-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = (examState.userPlaced.size < maxBarlines);
+      }
+    };
+
+    window.handleExamStaveAreaClick = function (e) {
+      if (!examState.tasks || examState.tasks.length === 0) return;
+      const container = document.getElementById('exam-notation-container');
+      if (!container || !examState.slotPositions || examState.slotPositions.length === 0) return;
+
+      const rect = container.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+
+      let bestSlotIdx = -1;
+      let minDist = 99999;
+
+      for (let i = 0; i < examState.slotPositions.length; i++) {
+        const dist = Math.abs(clickX - examState.slotPositions[i]);
+        if (dist < minDist) {
+          minDist = dist;
+          bestSlotIdx = i;
+        }
+      }
+
+      if (bestSlotIdx !== -1) {
+        window.handleExamSlotClick(bestSlotIdx);
+      }
+    };
+
+    window.submitExamAnswer = function () {
+      if (!examState.tasks || examState.tasks.length === 0) return;
+      const task = examState.tasks[examState.currentIndex];
+      if (!task) return;
+      const targetBeatsList = task.targetBeats || [EXERCISE_CATALOG[task.meter].beatsPerMeasure];
+
+      const isCorrect = targetBeatsList.every(function (target) {
+        let sum = 0;
+        for (let i = 0; i < task.notes.length - 1; i++) {
+          sum += task.notes[i].beats;
+          if (sum === target && examState.userPlaced.has(i)) {
+            return true;
+          }
+        }
+        return false;
+      }) && (examState.userPlaced.size === targetBeatsList.length);
+
+      if (isCorrect) {
+        examState.score++;
+      }
+
+      examState.answers.push({
+        taskIndex: examState.currentIndex + 1,
+        meter: task.meter,
+        formula: task.formula || (task.meter + '-Takt'),
+        isCorrect: isCorrect,
+        userSlots: Array.from(examState.userPlaced)
+      });
+
+      if (examState.currentIndex < 9) {
+        loadExamTask(examState.currentIndex + 1);
+      } else {
+        showExamResults();
+      }
+    };
+
+    function showExamResults() {
+      const qCard = document.getElementById('exam-question-card');
+      const rCard = document.getElementById('exam-results-card');
+      if (qCard) qCard.style.display = 'none';
+      if (rCard) rCard.style.display = 'flex';
+
+      const score = examState.score;
+      const percent = Math.round((score / 10) * 100);
+
+      let grade = 'Note 1+';
+      let message = 'Hervorragend! Alle 10 Aufgaben perfekt gelöst! Du bist die absolute Takt-Meisterin! 👑🌟';
+
+      if (score === 10) {
+        grade = 'Note 1+ (Mit Auszeichnung) 🏆';
+        message = 'Unglaublich! 10 von 10 richtig! Du hast jeden einzelnen Taktstrich perfekt berechnet! 👑';
+      } else if (score === 9) {
+        grade = 'Note 1 (Sehr gut) ⭐';
+        message = 'Fantastische Leistung! 9 von 10 richtig – das ist eine glatte Eins! 🌟';
+      } else if (score === 8) {
+        grade = 'Note 2 (Gut) 👍';
+        message = 'Super Ergebnis! 8 von 10 richtig – du bist absolut fit für die nächste Musikarbeit!';
+      } else if (score === 7) {
+        grade = 'Note 3 (Befriedigend) 🎵';
+        message = 'Gut mitgemacht! 7 von 10 richtig. Ein bisschen Feinschliff bei den Pausen oder Achteln, dann sitzt die 1!';
+      } else if (score >= 5) {
+        grade = 'Note 4 (Ausreichend) 💡';
+        message = 'Bestanden! 5 von 10 Aufgaben waren richtig. Schau dir die Notenwerte im Spickzettel noch einmal genau an!';
+      } else {
+        grade = 'Nochmal üben 💪';
+        message = 'Kopf hoch! Nutze den Übungsmodus mit den Rechenhilfen, um die Notenwerte spielerisch zu festigen, und versuche den Test dann erneut!';
+      }
+
+      document.getElementById('exam-final-grade').textContent = grade;
+      document.getElementById('exam-final-score').textContent = score + ' von 10 Aufgaben richtig (' + percent + '%)';
+      document.getElementById('exam-feedback-message').textContent = message;
+
+      if (score >= 8) {
+        playSuccessChime();
+        triggerConfetti(window.innerWidth / 2, window.innerHeight / 2);
+      }
+
+      const listEl = document.getElementById('exam-review-list');
+      if (listEl) {
+        listEl.innerHTML = '';
+        examState.answers.forEach(function (ans) {
+          const item = document.createElement('div');
+          item.className = 'exam-review-item ' + (ans.isCorrect ? 'correct' : 'incorrect');
+          item.innerHTML =
+            '<div>' +
+              '<strong>Aufgabe ' + ans.taskIndex + ': ' + ans.meter + '-Takt</strong> ' +
+              '<span style="opacity: 0.85; font-size: 0.88rem; margin-left: 6px;">(' + ans.formula + ')</span>' +
+            '</div>' +
+            '<div>' +
+              (ans.isCorrect ? '<span style="color: #059669; font-weight: 800;">✓ Richtig (+1)</span>' : '<span style="color: #dc2626; font-weight: 800;">✗ Falsch (0)</span>') +
+            '</div>';
+          listEl.appendChild(item);
+        });
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ==========================================================================
+       Globale Aktionen (Auf window verfügbar)
+       ========================================================================== */
+
     window.selectMeter = function (meter) {
       if (autoAdvanceTimer) {
         clearTimeout(autoAdvanceTimer);
@@ -2904,13 +3857,9 @@
       state.currentMeter = meter;
       document.querySelectorAll('.meter-btn').forEach(function (b) {
         b.classList.remove('active');
-        b.setAttribute('aria-checked', 'false');
       });
       const activeBtn = document.querySelector('.meter-btn[data-meter="' + meter + '"]');
-      if (activeBtn) {
-        activeBtn.classList.add('active');
-        activeBtn.setAttribute('aria-checked', 'true');
-      }
+      if (activeBtn) activeBtn.classList.add('active');
       loadExercise(meter, state.currentLevel, 0);
     };
 
@@ -3517,12 +4466,69 @@
     }
 
     document.addEventListener('click', function (e) {
-      const now = Date.now();
-      // Klickzähler und Welleneffekt
       totalClicks++;
       const counterEl = document.getElementById('debug-click-count');
       if (counterEl) counterEl.textContent = totalClicks.toString();
       spawnRipple(e.clientX, e.clientY);
+
+      // ====================================================================
+      // 0. Prüfungs-Modus Klicks (NUR WENN KLICK INNERHALB VON #exam-container)
+      // ====================================================================
+      const isExamElement = !!e.target.closest('#exam-container');
+
+      if (isExamElement) {
+        if (e.target.closest('#exit-exam-btn') || e.target.closest('#exam-back-to-practice-btn')) {
+          window.exitExam();
+          logAction('Zurück zum Übungs-Modus');
+          return;
+        }
+        if (e.target.closest('#exam-restart-btn')) {
+          window.startExam();
+          logAction('Prüfung neu gestartet');
+          return;
+        }
+        if (e.target.closest('#exam-submit-btn')) {
+          window.submitExamAnswer();
+          logAction('Prüfungs-Antwort abgegeben');
+          return;
+        }
+
+        // Klicks auf Slots oder Pill-Buttons in der Prüfung
+        const slotEl = e.target.closest('.barline-slot');
+        if (slotEl) {
+          const slotIdx = parseInt(slotEl.getAttribute('data-slot-index'), 10);
+          if (!isNaN(slotIdx)) {
+            window.handleExamSlotClick(slotIdx);
+            logAction('Prüfungs-Taktstrich bei Note ' + (slotIdx + 1) + ' gesetzt');
+          }
+          return;
+        }
+        const pillBtn = e.target.closest('.slot-pill-btn');
+        if (pillBtn) {
+          const slotIdx = parseInt(pillBtn.getAttribute('data-slot-index'), 10);
+          if (!isNaN(slotIdx)) {
+            window.handleExamSlotClick(slotIdx);
+            logAction('Prüfungs-Pill bei Note ' + (slotIdx + 1) + ' geklickt');
+          }
+          return;
+        }
+
+        // Klick auf den Notenbereich in der Prüfung
+        const examScoreWrapper = e.target.closest('.exam-score-wrapper');
+        if (examScoreWrapper) {
+          window.handleExamStaveAreaClick(e);
+          return;
+        }
+
+        return; // Alle weiteren Klicks innerhalb des Prüfungs-Containers konsumieren
+      }
+
+      // Prüfungs-Starter (vom Übungs-Modus aus)
+      if (e.target.closest('#open-exam-btn') || e.target.closest('.exam-banner-card')) {
+        window.startExam();
+        logAction('Prüfungs-Modus gestartet');
+        return;
+      }
 
       // 1. Taktart-Buttons (.meter-btn)
       const meterBtn = e.target.closest('.meter-btn');
@@ -3530,18 +4536,18 @@
         const meter = meterBtn.getAttribute('data-meter');
         if (meter) {
           window.selectMeter(meter);
-          logAction('Taktart: ' + meter + ' gewählt');
+          logAction('Taktart ' + meter + ' gewählt');
         }
         return;
       }
 
-      // 2. Stufen-Buttons (.level-tab)
+      // 2. Stufen-Tabs (.level-tab)
       const levelTab = e.target.closest('.level-tab');
       if (levelTab) {
-        const lvl = parseInt(levelTab.getAttribute('data-level'), 10);
-        if (!isNaN(lvl)) {
-          window.selectLevel(lvl);
-          logAction('Stufe ' + lvl + ' gewählt');
+        const level = parseInt(levelTab.getAttribute('data-level'), 10);
+        if (!isNaN(level)) {
+          window.selectLevel(level);
+          logAction('Stufe ' + level + ' gewählt');
         }
         return;
       }
@@ -3550,19 +4556,19 @@
       const audioBtn = e.target.closest('#audio-toggle-btn');
       if (audioBtn) {
         window.toggleAudio();
-        logAction('Ton: ' + (state.soundEnabled ? 'Ein' : 'Aus'));
+        logAction('Ton: ' + (state.soundEnabled ? 'An' : 'Aus'));
         return;
       }
 
-      // 4. Rhythmus abspielen (#play-rhythm-btn)
+      // 4. Play Rhythm (#play-rhythm-btn)
       const playBtn = e.target.closest('#play-rhythm-btn');
       if (playBtn) {
         window.togglePlayRhythm();
-        logAction('Rhythmus abgespielt');
+        logAction(state.isPlayingAudio ? 'Playback gestoppt' : 'Playback gestartet');
         return;
       }
 
-      // 5. Rechenhilfe (#toggle-help-btn)
+      // 5. Toggle Help (#toggle-help-btn)
       const helpBtn = e.target.closest('#toggle-help-btn');
       if (helpBtn) {
         window.toggleHelp();
@@ -3656,6 +4662,9 @@
       isInitialized = true;
       try {
         loadExercise('4/4', 1, 0);
+      if (window.location.hash === '#pruefung' || window.location.hash === '#test') {
+        setTimeout(window.startExam, 100);
+      }
       } catch (e) {
         console.error("Initial load error:", e);
       }
@@ -3664,7 +4673,12 @@
       window.addEventListener('resize', function () {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function () {
-          renderScore();
+          const examEl = document.getElementById('exam-container');
+          if (examEl && examEl.style.display !== 'none' && examState.tasks && examState.tasks.length > 0) {
+            loadExamTask(examState.currentIndex);
+          } else {
+            renderScore();
+          }
         }, 150);
       });
     }
