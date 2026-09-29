@@ -544,16 +544,23 @@
       filter: drop-shadow(0 0 6px rgba(79, 70, 229, 0.6));
     }
 
-    .barline-slot .slot-badge {
-      opacity: 0;
-      transform: translateY(4px);
-      transition: all 0.2s ease;
-      pointer-events: none;
+    /* Verhindert Hover-Flackern beim Aufgabenwechsel */
+    .suppress-hover .barline-slot:hover .slot-hitbox {
+      fill: rgba(79, 70, 229, 0.001) !important;
     }
-
-    .barline-slot:hover .slot-badge {
-      opacity: 1;
-      transform: translateY(0);
+    .suppress-hover .barline-slot:hover .slot-guide {
+      stroke: #818cf8 !important;
+      stroke-dasharray: 4, 4 !important;
+      stroke-width: 3.5 !important;
+      opacity: 0.4 !important;
+      filter: none !important;
+    }
+    .suppress-hover .slot-pill-btn:hover {
+      background: white !important;
+      color: #4338ca !important;
+      border-color: #818cf8 !important;
+      transform: translateX(-50%) !important;
+      box-shadow: none !important;
     }
 
     .barline-slot.wobble {
@@ -2868,31 +2875,6 @@
           guideLine.setAttribute('y2', yBottom);
           slotG.appendChild(guideLine);
 
-          // Hover Badge
-          const badgeG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-          badgeG.setAttribute('class', 'slot-badge');
-
-          const badgeBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          badgeBg.setAttribute('x', xMid - 36);
-          badgeBg.setAttribute('y', yTop - 25);
-          badgeBg.setAttribute('width', 72);
-          badgeBg.setAttribute('height', 20);
-          badgeBg.setAttribute('rx', '6');
-          badgeBg.setAttribute('fill', '#4f46e5');
-          badgeG.appendChild(badgeBg);
-
-          const badgeText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          badgeText.setAttribute('x', xMid);
-          badgeText.setAttribute('y', yTop - 11);
-          badgeText.setAttribute('text-anchor', 'middle');
-          badgeText.setAttribute('font-family', 'Fredoka, sans-serif');
-          badgeText.setAttribute('font-size', '10.5');
-          badgeText.setAttribute('font-weight', '700');
-          badgeText.setAttribute('fill', 'white');
-          badgeText.textContent = '+ Taktstrich';
-          badgeG.appendChild(badgeText);
-
-          slotG.appendChild(badgeG);
           interactionGroup.appendChild(slotG);
 
           // Zusätzlicher Pill-Button direkt unter der Zeile
@@ -2902,7 +2884,6 @@
             pillBtn.style.left = xMid + 'px';
             pillBtn.setAttribute('data-slot-index', i);
             pillBtn.textContent = '➕ Hier';
-            pillBtn.title = 'Taktstrich hier setzen';
             pillContainer.appendChild(pillBtn);
           }
         }
@@ -3342,6 +3323,17 @@
 
       updateCheatSheetForMeter(meter);
       renderScore();
+
+      const scoreCard = document.querySelector('.score-card');
+      if (scoreCard) {
+        scoreCard.classList.add('suppress-hover');
+        const clearSuppress = function () {
+          scoreCard.classList.remove('suppress-hover');
+          window.removeEventListener('pointermove', clearSuppress);
+        };
+        window.addEventListener('pointermove', clearSuppress, { once: true });
+        setTimeout(clearSuppress, 350);
+      }
     }
 
     function updateInstructions(meterConfig) {
