@@ -625,10 +625,6 @@
       transition: none;
     }
 
-    .barline-slot:hover .slot-hitbox {
-      fill: transparent !important; /* Absolut keine Farbfläche bei Hover! */
-    }
-
     .barline-slot .slot-guide {
       stroke: #94a3b8;
       stroke-width: 2.5;
@@ -638,31 +634,28 @@
       pointer-events: none;
     }
 
-    .barline-slot:hover .slot-guide {
-      stroke: #0f172a; /* Seriöser, klarer Taktstrich-Vorschau-Strich in Noten-Schwarz */
-      stroke-width: 3.5;
-      stroke-dasharray: none; /* Durchgezogener echter Taktstrich bei Hover */
-      opacity: 0.9;
-      filter: none; /* Kein lila Halo/Glow mehr! */
-    }
-
-    /* Verhindert Hover-Flackern beim Aufgabenwechsel */
-    .suppress-hover .barline-slot:hover .slot-hitbox {
-      fill: transparent !important;
-    }
-    .suppress-hover .barline-slot:hover .slot-guide {
-      stroke: #94a3b8 !important;
-      stroke-dasharray: 4, 4 !important;
-      stroke-width: 2.5 !important;
-      opacity: 0.35 !important;
-      filter: none !important;
-    }
-    .suppress-hover .slot-pill-btn:hover {
-      background: rgba(255, 255, 255, 0.85) !important;
-      color: #334155 !important;
-      border-color: rgba(148, 163, 184, 0.6) !important;
-      transform: translateX(-50%) !important;
-      box-shadow: none !important;
+    /* Taktstrich-Vorschau NUR auf echten Maus-Geräten (verhindert Sticky Hover auf Touch/iPhone!) */
+    @media (hover: hover) and (pointer: fine) {
+      .barline-slot:hover .slot-guide {
+        stroke: #0f172a;
+        stroke-width: 3.5;
+        stroke-dasharray: none;
+        opacity: 0.9;
+        filter: none;
+      }
+      .suppress-hover .barline-slot:hover .slot-guide {
+        stroke: #94a3b8 !important;
+        stroke-dasharray: 4, 4 !important;
+        stroke-width: 2.5 !important;
+        opacity: 0.35 !important;
+      }
+      .suppress-hover .slot-pill-btn:hover {
+        background: rgba(255, 255, 255, 0.85) !important;
+        color: #334155 !important;
+        border-color: rgba(148, 163, 184, 0.6) !important;
+        transform: translateX(-50%) !important;
+        box-shadow: none !important;
+      }
     }
 
     .barline-slot.wobble {
@@ -735,12 +728,14 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
     }
 
-    .slot-pill-btn:hover {
-      background: #0f172a;
-      color: white;
-      border-color: #0f172a;
-      transform: translateX(-50%) translateY(-2px);
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+    @media (hover: hover) and (pointer: fine) {
+      .slot-pill-btn:hover {
+        background: #0f172a;
+        color: white;
+        border-color: #0f172a;
+        transform: translateX(-50%) translateY(-2px);
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+      }
     }
 
     .slot-pill-btn:active {
@@ -4308,6 +4303,9 @@
     }
 
     function loadExercise(meter, level, index) {
+      if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
+      }
       stopRhythm();
       state.currentMeter = meter;
       state.currentLevel = level;
@@ -4326,7 +4324,12 @@
 
       const missingCount = level === 4 ? 2 : 1;
       const missInfo = document.getElementById('missing-info');
-      if (missInfo) missInfo.textContent = '📍 ' + missingCount + ' Taktstrich' + (missingCount > 1 ? 'e fehlen' : ' fehlt') + '!';
+      if (missInfo) {
+        missInfo.textContent = '📍 ' + missingCount + ' Taktstrich' + (missingCount > 1 ? 'e fehlen' : ' fehlt') + '!';
+        missInfo.style.color = '#0284c7';
+        missInfo.style.background = 'rgba(2, 132, 199, 0.1)';
+        missInfo.style.borderColor = 'rgba(2, 132, 199, 0.2)';
+      }
 
       const nextBtn = document.getElementById('next-task-btn');
       if (nextBtn) {
