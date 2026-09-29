@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Takt-Meisterin – Spielerisch Taktarten lernen</title>
 
-  <!-- Google Fonts mit Fallback auf Systemschrift -->
+  <!-- Google Fonts mit Systemschrift-Fallback -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -1024,7 +1024,7 @@
       margin-top: 6px;
     }
 
-    /* Modal Overlay (standardmäßig display:none) */
+    /* Modal Overlay */
     .modal-overlay {
       display: none !important;
       position: fixed;
@@ -1089,7 +1089,6 @@
       line-height: 1.4;
     }
 
-    /* Responsive Anpassungen */
     @media (max-width: 768px) {
       .meter-buttons {
         grid-template-columns: repeat(2, 1fr);
@@ -1149,7 +1148,7 @@
           <span>🔥</span>
           <span id="streak-counter">0</span>er-Serie
         </div>
-        <button id="audio-toggle-btn" class="audio-toggle-btn" onclick="window.toggleAudio()" title="Ton ein- oder ausschalten">
+        <button id="audio-toggle-btn" class="audio-toggle-btn" title="Ton ein- oder ausschalten">
           🔊
         </button>
       </div>
@@ -1162,7 +1161,7 @@
         <h3 id="meter-selector-heading">Taktart wählen:</h3>
       </div>
       <div class="meter-buttons" role="radiogroup" aria-label="Taktart auswählen">
-        <button class="meter-btn active" data-meter="4/4" onclick="window.selectMeter('4/4')" role="radio" aria-checked="true">
+        <button class="meter-btn active" data-meter="4/4" role="radio" aria-checked="true">
           <span class="meter-fraction-box">
             <span>4</span>
             <span>4</span>
@@ -1173,7 +1172,7 @@
           </div>
         </button>
 
-        <button class="meter-btn" data-meter="3/4" onclick="window.selectMeter('3/4')" role="radio" aria-checked="false">
+        <button class="meter-btn" data-meter="3/4" role="radio" aria-checked="false">
           <span class="meter-fraction-box">
             <span>3</span>
             <span>4</span>
@@ -1184,7 +1183,7 @@
           </div>
         </button>
 
-        <button class="meter-btn" data-meter="2/4" onclick="window.selectMeter('2/4')" role="radio" aria-checked="false">
+        <button class="meter-btn" data-meter="2/4" role="radio" aria-checked="false">
           <span class="meter-fraction-box">
             <span>2</span>
             <span>4</span>
@@ -1195,7 +1194,7 @@
           </div>
         </button>
 
-        <button class="meter-btn" data-meter="6/8" onclick="window.selectMeter('6/8')" role="radio" aria-checked="false">
+        <button class="meter-btn" data-meter="6/8" role="radio" aria-checked="false">
           <span class="meter-fraction-box">
             <span>6</span>
             <span>8</span>
@@ -1223,16 +1222,16 @@
 
     <!-- Schwierigkeits-Tabs -->
     <nav class="level-tabs" aria-label="Schwierigkeitsstufe wählen">
-      <button class="level-tab active" data-level="1" onclick="window.selectLevel(1)">🟢 Stufe 1: Viertel &amp; Halbe</button>
-      <button class="level-tab" data-level="2" onclick="window.selectLevel(2)">🟡 Stufe 2: + Achtelnoten (♫)</button>
-      <button class="level-tab" data-level="3" onclick="window.selectLevel(3)">🟣 Stufe 3: + Pausen &amp; Spezielle</button>
-      <button class="level-tab" data-level="4" onclick="window.selectLevel(4)">👑 3-Takte-Challenge</button>
+      <button class="level-tab active" data-level="1">🟢 Stufe 1: Viertel &amp; Halbe</button>
+      <button class="level-tab" data-level="2">🟡 Stufe 2: + Achtelnoten (♫)</button>
+      <button class="level-tab" data-level="3">🟣 Stufe 3: + Pausen &amp; Spezielle</button>
+      <button class="level-tab" data-level="4">👑 3-Takte-Challenge</button>
     </nav>
 
     <!-- Notenblatt & Interaktive Klickzone -->
     <main class="score-card">
       <div class="score-card-header">
-        <span class="task-badge" id="task-indicator">Aufgabe 1 von 3</span>
+        <span class="task-badge" id="task-indicator">Aufgabe 1 von 5</span>
         <span class="missing-info" id="missing-info">📍 1 Taktstrich fehlt!</span>
       </div>
 
@@ -1261,13 +1260,13 @@
 
       <!-- Steuerungs-Buttons -->
       <div class="controls-row">
-        <button class="btn btn-audio" id="play-rhythm-btn" onclick="window.togglePlayRhythm()" title="Höre dir den Rhythmus an">
+        <button class="btn btn-audio" id="play-rhythm-btn" title="Höre dir den Rhythmus an">
           <span>🎵</span> Takt anhören
         </button>
-        <button class="btn btn-secondary" id="toggle-help-btn" onclick="window.toggleHelp()" title="Zeige oder verstecke die Notenwerte als Hilfe">
+        <button class="btn btn-secondary" id="toggle-help-btn" title="Zeige oder verstecke die Notenwerte als Hilfe">
           <span>💡</span> Rechenhilfe: An
         </button>
-        <button class="btn btn-primary" id="next-task-btn" onclick="window.nextExercise()" title="Lade eine neue Notenkombination">
+        <button class="btn btn-primary" id="next-task-btn" title="Lade eine neue Notenkombination">
           <span>Nächste Aufgabe</span> ➡️
         </button>
       </div>
@@ -1284,42 +1283,42 @@
       </div>
 
       <div class="notes-grid" id="notes-grid">
-        <div class="note-card" data-beats="4" data-name="𝅝 Ganze Note (4)" onclick="window.addSandboxNote(4, '𝅝 Ganze Note (4)')" title="Klicke für den Takt-Baukasten">
+        <div class="note-card" data-beats="4" data-name="𝅝 Ganze Note (4)" title="Klicke für den Takt-Baukasten">
           <div class="note-card-symbol">𝅝</div>
           <div class="note-card-name">Ganze Note</div>
           <div class="note-card-beats">4 Schläge</div>
           <div class="note-card-desc">Weißer Kopf ohne Hals. Füllt 1 ganzen 4/4-Takt!</div>
         </div>
 
-        <div class="note-card" id="card-dotted-half" data-beats="3" data-name="𝅗𝅥. Punktierte Halbe (3)" onclick="window.addSandboxNote(3, '𝅗𝅥. Punktierte Halbe (3)')" title="Klicke für den Takt-Baukasten">
+        <div class="note-card" id="card-dotted-half" data-beats="3" data-name="𝅗𝅥. Punktierte Halbe (3)" title="Klicke für den Takt-Baukasten">
           <div class="note-card-symbol">𝅗𝅥.</div>
           <div class="note-card-name">Punktierte Halbe</div>
           <div class="note-card-beats">3 Schläge (2 + 1)</div>
           <div class="note-card-desc">Füllt 1 ganzen 3/4-Takt komplett aus!</div>
         </div>
 
-        <div class="note-card" data-beats="2" data-name="𝅗𝅥 Halbe Note (2)" onclick="window.addSandboxNote(2, '𝅗𝅥 Halbe Note (2)')" title="Klicke für den Takt-Baukasten">
+        <div class="note-card" data-beats="2" data-name="𝅗𝅥 Halbe Note (2)" title="Klicke für den Takt-Baukasten">
           <div class="note-card-symbol">𝅗𝅥</div>
           <div class="note-card-name">Halbe Note</div>
           <div class="note-card-beats">2 Schläge</div>
           <div class="note-card-desc">Weißer Kopf mit Hals. Füllt 1 halben 4/4-Takt.</div>
         </div>
 
-        <div class="note-card" data-beats="1" data-name="𝅘𝅥 Viertelnote (1)" onclick="window.addSandboxNote(1, '𝅘𝅥 Viertelnote (1)')" title="Klicke für den Takt-Baukasten">
+        <div class="note-card" data-beats="1" data-name="𝅘𝅥 Viertelnote (1)" title="Klicke für den Takt-Baukasten">
           <div class="note-card-symbol">𝅘𝅥</div>
           <div class="note-card-name">Viertelnote</div>
           <div class="note-card-beats">1 Schlag</div>
           <div class="note-card-desc">Schwarzer Kopf mit Hals. Der Grundschlag.</div>
         </div>
 
-        <div class="note-card" data-beats="1" data-name="♫ 2 Achtelnoten (1)" onclick="window.addSandboxNote(1, '♫ 2 Achtelnoten (1)')" title="Klicke für den Takt-Baukasten">
+        <div class="note-card" data-beats="1" data-name="♫ 2 Achtelnoten (1)" title="Klicke für den Takt-Baukasten">
           <div class="note-card-symbol">♫</div>
           <div class="note-card-name">2 Achtelnoten</div>
           <div class="note-card-beats">½ + ½ = 1 Schlag</div>
           <div class="note-card-desc">Mit Balken verbunden. Zwei teilen sich 1 Schlag.</div>
         </div>
 
-        <div class="note-card" data-beats="1" data-name="𝄽 Viertelpause (1)" onclick="window.addSandboxNote(1, '𝄽 Viertelpause (1)')" title="Klicke für den Takt-Baukasten">
+        <div class="note-card" data-beats="1" data-name="𝄽 Viertelpause (1)" title="Klicke für den Takt-Baukasten">
           <div class="note-card-symbol">𝄽</div>
           <div class="note-card-name">Viertelpause</div>
           <div class="note-card-beats">1 Schlag Pause</div>
@@ -1331,7 +1330,7 @@
       <div class="sandbox-box">
         <div class="sandbox-header">
           <h4 id="sandbox-header-title">🧩 Interaktiver Takt-Baukasten: Baue deinen 4/4-Takt</h4>
-          <button class="sandbox-chip-btn sandbox-reset-btn" onclick="window.resetSandbox()">🔄 Leeren</button>
+          <button class="sandbox-chip-btn sandbox-reset-btn">🔄 Leeren</button>
         </div>
         
         <div class="beat-measure-bar" id="sandbox-measure-bar" title="Hier werden die Notenwerte addiert!">
@@ -1339,12 +1338,12 @@
         </div>
 
         <div class="sandbox-controls" id="sandbox-controls">
-          <button class="sandbox-chip-btn" data-beats="1" data-name="𝅘𝅥 Viertel (1)" onclick="window.addSandboxNote(1, '𝅘𝅥 Viertel (1)')">+ 𝅘𝅥 Viertel (1)</button>
-          <button class="sandbox-chip-btn" data-beats="2" data-name="𝅗𝅥 Halbe (2)" onclick="window.addSandboxNote(2, '𝅗𝅥 Halbe (2)')">+ 𝅗𝅥 Halbe (2)</button>
-          <button class="sandbox-chip-btn" id="sandbox-add-dotted-half" data-beats="3" data-name="𝅗𝅥. Punktierte Halbe (3)" onclick="window.addSandboxNote(3, '𝅗𝅥. Punktierte Halbe (3)')">+ 𝅗𝅥. Punktierte Halbe (3)</button>
-          <button class="sandbox-chip-btn" data-beats="1" data-name="♫ 2 Achtel (1)" onclick="window.addSandboxNote(1, '♫ 2 Achtel (1)')">+ ♫ 2 Achtel (1)</button>
-          <button class="sandbox-chip-btn" id="sandbox-add-whole" data-beats="4" data-name="𝅝 Ganze (4)" onclick="window.addSandboxNote(4, '𝅝 Ganze (4)')">+ 𝅝 Ganze (4)</button>
-          <button class="sandbox-chip-btn" data-beats="1" data-name="𝄽 Pause (1)" onclick="window.addSandboxNote(1, '𝄽 Pause (1)')">+ 𝄽 Pause (1)</button>
+          <button class="sandbox-chip-btn" data-beats="1" data-name="𝅘𝅥 Viertel (1)">+ 𝅘𝅥 Viertel (1)</button>
+          <button class="sandbox-chip-btn" data-beats="2" data-name="𝅗𝅥 Halbe (2)">+ 𝅗𝅥 Halbe (2)</button>
+          <button class="sandbox-chip-btn" id="sandbox-add-dotted-half" data-beats="3" data-name="𝅗𝅥. Punktierte Halbe (3)">+ 𝅗𝅥. Punktierte Halbe (3)</button>
+          <button class="sandbox-chip-btn" data-beats="1" data-name="♫ 2 Achtel (1)">+ ♫ 2 Achtel (1)</button>
+          <button class="sandbox-chip-btn" id="sandbox-add-whole" data-beats="4" data-name="𝅝 Ganze (4)">+ 𝅝 Ganze (4)</button>
+          <button class="sandbox-chip-btn" data-beats="1" data-name="𝄽 Pause (1)">+ 𝄽 Pause (1)</button>
         </div>
 
         <div class="sandbox-status" id="sandbox-status-text">
@@ -1361,7 +1360,7 @@
       <div class="modal-icon">🏆</div>
       <h3 id="modal-title">Fantastisch gemacht!</h3>
       <p id="modal-desc">Du hast fleißig Takte gelöst und bist jetzt eine echte Takt-Meisterin!</p>
-      <button class="btn btn-primary" id="modal-close-btn" onclick="window.closeModal()" style="width: 100%;">
+      <button class="btn btn-primary" id="modal-close-btn" style="width: 100%;">
         Weiter üben! 🚀
       </button>
     </div>
@@ -1371,7 +1370,7 @@
        JavaScript Anwendungs-Logik
        ========================================================================== -->
   <script>
-    /* Globaler Fehlerschutz: Zeigt Fehler direkt im UI an */
+    /* Globaler Fehlerschutz */
     window.onerror = function (msg, url, line) {
       var bar = document.getElementById('app-live-status-bar');
       if (bar) {
@@ -1396,368 +1395,1085 @@
     };
 
     /* ==========================================================================
-       Aufgaben-Katalog
+       Umfangreicher, mathematisch geprüfter Aufgaben-Katalog
        ========================================================================== */
     const EXERCISE_CATALOG = {
-      '4/4': {
-        beatsPerMeasure: 4.0,
-        meterName: '4/4-Takt',
-        meterLabel: 'Viervierteltakt',
-        countRule: '4 Schläge',
-        levels: {
-          1: [
-            {
-              title: "Melodie mit Viertel- und Halben Noten",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
-              ],
-              totalBeats: 8,
-              targetBeats: [4.0],
-              formula: "1 + 1 + 2 = 4 Schläge"
-            },
-            {
-              title: "Zwei Halbe gegen vier Viertel",
-              notes: [
-                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 }
-              ],
-              totalBeats: 8,
-              targetBeats: [4.0],
-              formula: "2 + 2 = 4 Schläge"
-            },
-            {
-              title: "Der Wiegeschritt in 4/4",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "h", name: "Halbe", beats: 2 }
-              ],
-              totalBeats: 8,
-              targetBeats: [4.0],
-              formula: "1 + 2 + 1 = 4 Schläge"
-            }
+  '4/4': {
+    beatsPerMeasure: 4.0,
+    meterName: '4/4-Takt',
+    meterLabel: 'Viervierteltakt',
+    countRule: '4 Schläge',
+    levels: {
+      1: [
+        {
+          title: "Melodie mit Viertel- und Halben Noten",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
           ],
-          2: [
-            {
-              title: "Lustiger Achtel-Hüpfer",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "f/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
-              ],
-              totalBeats: 8,
-              targetBeats: [4.0],
-              formula: "1 + ½ + ½ + 2 = 4 Schläge"
-            },
-            {
-              title: "Vier Achtel auf Wanderschaft",
-              notes: [
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
-              ],
-              totalBeats: 8,
-              targetBeats: [4.0],
-              formula: "1 + ½ + ½ + ½ + ½ + 1 = 4 Schläge"
-            }
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "1 + 1 + 2 = 4 Schläge"
+        },
+        {
+          title: "Zwei Halbe gegen vier Viertel",
+          notes: [
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 }
           ],
-          3: [
-            {
-              title: "Die majestätische Ganze Note",
-              notes: [
-                { key: "c/5", duration: "w", name: "Ganze Note", beats: 4 },
-                { key: "b/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
-              ],
-              totalBeats: 8,
-              targetBeats: [4.0],
-              formula: "4 = 4 Schläge (Ganze Note füllt den 1. Takt allein!)"
-            },
-            {
-              title: "Pause zum Luftholen",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "b/4", duration: "qr", name: "Viertelpause", beats: 1 },
-                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
-              ],
-              totalBeats: 8,
-              targetBeats: [4.0],
-              formula: "1 + 1 + 2 = 4 Schläge"
-            }
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "2 + 2 = 4 Schläge"
+        },
+        {
+          title: "Der Wiegeschritt in 4/4",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 }
           ],
-          4: [
-            {
-              title: "Große Melodie in drei Takten",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "d/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "f/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "c/5", duration: "h", name: "Halbe", beats: 2 }
-              ],
-              totalBeats: 12,
-              targetBeats: [4.0, 8.0],
-              formula: "Takt 1: 1+1+2=4 | Takt 2: 2+2=4 | Takt 3: 1+1+2=4"
-            }
-          ]
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "1 + 2 + 1 = 4 Schläge"
+        },
+        {
+          title: "Vier Viertel im Anmarsch",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/5", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "1 + 1 + 1 + 1 = 4 Schläge"
+        },
+        {
+          title: "Halbe am Anfang und Ende",
+          notes: [
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "2 + 1 + 1 = 4 Schläge"
         }
-      },
+      ],
+      2: [
+        {
+          title: "Lustiger Achtel-Hüpfer",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "1 + ½ + ½ + 2 = 4 Schläge"
+        },
+        {
+          title: "Vier Achtel auf Wanderschaft",
+          notes: [
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "1 + ½ + ½ + ½ + ½ + 1 = 4 Schläge"
+        },
+        {
+          title: "Achtelsprung zur Halben Note",
+          notes: [
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "2 + ½ + ½ + 1 = 4 Schläge"
+        },
+        {
+          title: "Zweimal zwei Achtel",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "½ + ½ + ½ + ½ + 2 = 4 Schläge"
+        },
+        {
+          title: "Die Treppe hinab",
+          notes: [
+            { key: "c/5", duration: "q", name: "Viertel", beats: 1 },
+            { key: "b/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "1 + 1 + ½ + ½ + 1 = 4 Schläge"
+        }
+      ],
+      3: [
+        {
+          title: "Die majestätische Ganze Note",
+          notes: [
+            { key: "c/5", duration: "w", name: "Ganze Note", beats: 4 },
+            { key: "b/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "4 = 4 Schläge (Ganze Note füllt den 1. Takt allein!)"
+        },
+        {
+          title: "Pause zum Luftholen",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "b/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "1 + 1 + 2 = 4 Schläge"
+        },
+        {
+          title: "Viertelpause in der Mitte",
+          notes: [
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "w", name: "Ganze Note", beats: 4 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "2 + 1 + 1 = 4 Schläge"
+        },
+        {
+          title: "Ganze Note am Schluss",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/5", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "w", name: "Ganze Note", beats: 4 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "1 + 1 + 1 + 1 = 4 Schläge"
+        },
+        {
+          title: "Zwei Pausen im Takt",
+          notes: [
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/5", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 8,
+          targetBeats: [4.0],
+          formula: "1 + 1 + 1 + 1 = 4 Schläge"
+        }
+      ],
+      4: [
+        {
+          title: "Große Melodie in drei Takten",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "f/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/5", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 12,
+          targetBeats: [4.0, 8.0],
+          formula: "Takt 1: 1+1+2=4 | Takt 2: 2+2=4 | Takt 3: 1+1+2=4"
+        },
+        {
+          title: "3 Takte mit Ganzer Note",
+          notes: [
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "w", name: "Ganze Note", beats: 4 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 12,
+          targetBeats: [4.0, 8.0],
+          formula: "Takt 1: 2+2=4 | Takt 2: 4=4 | Takt 3: 1+1+2=4"
+        },
+        {
+          title: "Achtellauf durch drei Takte",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/5", duration: "w", name: "Ganze Note", beats: 4 }
+          ],
+          totalBeats: 12,
+          targetBeats: [4.0, 8.0],
+          formula: "Takt 1: 1+1+2=4 | Takt 2: 1+1+2=4 | Takt 3: 4=4"
+        },
+        {
+          title: "Pause und Bewegung",
+          notes: [
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "a/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 12,
+          targetBeats: [4.0, 8.0],
+          formula: "Takt 1: 2+1+1=4 | Takt 2: 2+2=4 | Takt 3: 1+1+2=4"
+        }
+      ]
+    }
+  },
 
-      '3/4': {
-        beatsPerMeasure: 3.0,
-        meterName: '3/4-Takt',
-        meterLabel: 'Dreivierteltakt (Walzer)',
-        countRule: '3 Schläge',
-        levels: {
-          1: [
-            {
-              title: "Schwingender Walzerschritt",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "c/5", duration: "q", name: "Viertel", beats: 1 }
-              ],
-              totalBeats: 6,
-              targetBeats: [3.0],
-              formula: "1 + 2 = 3 Schläge"
-            },
-            {
-              title: "Drei Viertel im Takt",
-              notes: [
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "d/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
-              ],
-              totalBeats: 6,
-              targetBeats: [3.0],
-              formula: "1 + 1 + 1 = 3 Schläge"
-            }
+  '3/4': {
+    beatsPerMeasure: 3.0,
+    meterName: '3/4-Takt',
+    meterLabel: 'Dreivierteltakt (Walzer)',
+    countRule: '3 Schläge',
+    levels: {
+      1: [
+        {
+          title: "Schwingender Walzerschritt",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/5", duration: "q", name: "Viertel", beats: 1 }
           ],
-          2: [
-            {
-              title: "Achtelnoten im Walzer",
-              notes: [
-                { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 }
-              ],
-              totalBeats: 6,
-              targetBeats: [3.0],
-              formula: "½ + ½ + 1 + 1 = 3 Schläge"
-            }
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1 + 2 = 3 Schläge"
+        },
+        {
+          title: "Drei Viertel im Takt",
+          notes: [
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
           ],
-          3: [
-            {
-              title: "Die punktierte Halbe Note (3 Schläge!)",
-              notes: [
-                { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "h", name: "Halbe", beats: 2 }
-              ],
-              totalBeats: 6,
-              targetBeats: [3.0],
-              formula: "3 = 3 Schläge (Punktierte Halbe füllt 1 ganzen 3/4-Takt!)"
-            }
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1 + 1 + 1 = 3 Schläge"
+        },
+        {
+          title: "Halbe vor Viertel",
+          notes: [
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "q", name: "Viertel", beats: 1 }
           ],
-          4: [
-            {
-              title: "3 Takte Walzer-Challenge (9 Schläge)",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
-              ],
-              totalBeats: 9,
-              targetBeats: [3.0, 6.0],
-              formula: "Takt 1: 1+2=3 | Takt 2: 1+1+1=3 | Takt 3: 3=3"
-            }
-          ]
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "2 + 1 = 3 Schläge"
+        },
+        {
+          title: "Wiener Walzertanz",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1 + 1 + 1 = 3 Schläge"
+        },
+        {
+          title: "Der Kuckuck im Dreivierteltakt",
+          notes: [
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "2 + 1 = 3 Schläge"
         }
-      },
+      ],
+      2: [
+        {
+          title: "Achtelnoten im Walzer",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "½ + ½ + 1 + 1 = 3 Schläge"
+        },
+        {
+          title: "Achtel am Taktende",
+          notes: [
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1 + 1 + ½ + ½ = 3 Schläge"
+        },
+        {
+          title: "Vier Achtel im Walzer",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "c/5", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1 + ½ + ½ + ½ + ½ = 3 Schläge"
+        },
+        {
+          title: "Achtelsprung nach vorn",
+          notes: [
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "2 + ½ + ½ = 3 Schläge"
+        },
+        {
+          title: "Schwebende Achtel",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "½ + ½ + 2 = 3 Schläge"
+        }
+      ],
+      3: [
+        {
+          title: "Die punktierte Halbe Note (3 Schläge!)",
+          notes: [
+            { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "3 = 3 Schläge (Punktierte Halbe füllt 1 ganzen 3/4-Takt!)"
+        },
+        {
+          title: "Zwei punktierte Halbe",
+          notes: [
+            { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "3 = 3 Schläge"
+        },
+        {
+          title: "Walzerpause auf Schlag 3",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1 + 1 + 1 = 3 Schläge"
+        },
+        {
+          title: "Punktierte Halbe am Schluss",
+          notes: [
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "2 + 1 = 3 Schläge"
+        },
+        {
+          title: "Pause zwischen zwei Vierteln",
+          notes: [
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1 + 1 + 1 = 3 Schläge"
+        }
+      ],
+      4: [
+        {
+          title: "3 Takte Walzer-Challenge (9 Schläge)",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 9,
+          targetBeats: [3.0, 6.0],
+          formula: "Takt 1: 1+2=3 | Takt 2: 1+1+1=3 | Takt 3: 3=3"
+        },
+        {
+          title: "Walzer mit Punktierter Halber und Achteln",
+          notes: [
+            { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+            { key: "b/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 9,
+          targetBeats: [3.0, 6.0],
+          formula: "Takt 1: 3=3 | Takt 2: ½+½+2=3 | Takt 3: 1+1+1=3"
+        },
+        {
+          title: "Drei Takte im Tanzschritt",
+          notes: [
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "d/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 9,
+          targetBeats: [3.0, 6.0],
+          formula: "Takt 1: 2+1=3 | Takt 2: 2+1=3 | Takt 3: 3=3"
+        },
+        {
+          title: "Walzermelodie mit Pause",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 9,
+          targetBeats: [3.0, 6.0],
+          formula: "Takt 1: 1+1+1=3 | Takt 2: 3=3 | Takt 3: 1+2=3"
+        }
+      ]
+    }
+  },
 
-      '2/4': {
-        beatsPerMeasure: 2.0,
-        meterName: '2/4-Takt',
-        meterLabel: 'Zweivierteltakt (Marsch)',
-        countRule: '2 Schläge',
-        levels: {
-          1: [
-            {
-              title: "Eins, zwei – Marsch!",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
-              ],
-              totalBeats: 4,
-              targetBeats: [2.0],
-              formula: "1 + 1 = 2 Schläge"
-            },
-            {
-              title: "Halbe Note füllt den 1. Takt",
-              notes: [
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
-              ],
-              totalBeats: 4,
-              targetBeats: [2.0],
-              formula: "2 = 2 Schläge"
-            }
+  '2/4': {
+    beatsPerMeasure: 2.0,
+    meterName: '2/4-Takt',
+    meterLabel: 'Zweivierteltakt (Marsch)',
+    countRule: '2 Schläge',
+    levels: {
+      1: [
+        {
+          title: "Eins, zwei – Marsch!",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
           ],
-          2: [
-            {
-              title: "Achtellauf im 2/4-Takt",
-              notes: [
-                { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
-              ],
-              totalBeats: 4,
-              targetBeats: [2.0],
-              formula: "½ + ½ + 1 = 2 Schläge"
-            }
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "1 + 1 = 2 Schläge"
+        },
+        {
+          title: "Halbe Note füllt den 1. Takt",
+          notes: [
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
           ],
-          3: [
-            {
-              title: "Pause im 2/4-Takt",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "qr", name: "Viertelpause", beats: 1 },
-                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "c/5", duration: "q", name: "Viertel", beats: 1 }
-              ],
-              totalBeats: 4,
-              targetBeats: [2.0],
-              formula: "1 + 1 = 2 Schläge"
-            }
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "2 = 2 Schläge"
+        },
+        {
+          title: "Zwei Halbe im Marschtakt",
+          notes: [
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
           ],
-          4: [
-            {
-              title: "3 Takte Marsch-Challenge (6 Schläge)",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
-                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "c/5", duration: "q", name: "Viertel", beats: 1 }
-              ],
-              totalBeats: 6,
-              targetBeats: [2.0, 4.0],
-              formula: "Takt 1: 1+1=2 | Takt 2: 2=2 | Takt 3: 1+1=2"
-            }
-          ]
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "2 = 2 Schläge"
+        },
+        {
+          title: "Vier Viertel im 2/4-Takt",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "1 + 1 = 2 Schläge"
+        },
+        {
+          title: "Schritt für Schritt",
+          notes: [
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "1 + 1 = 2 Schläge"
         }
-      },
+      ],
+      2: [
+        {
+          title: "Achtellauf im 2/4-Takt",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "½ + ½ + 1 = 2 Schläge"
+        },
+        {
+          title: "Vier Achtel füllen einen Takt",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "½ + ½ + ½ + ½ = 2 Schläge"
+        },
+        {
+          title: "Viertel vor zwei Achteln",
+          notes: [
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "1 + ½ + ½ = 2 Schläge"
+        },
+        {
+          title: "Achtel im zweiten Takt",
+          notes: [
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "2 = 2 Schläge"
+        },
+        {
+          title: "Achterbahn im Marsch",
+          notes: [
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "½ + ½ + 1 = 2 Schläge"
+        }
+      ],
+      3: [
+        {
+          title: "Pause im 2/4-Takt",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/5", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "1 + 1 = 2 Schläge"
+        },
+        {
+          title: "Halbe Note trifft Pause",
+          notes: [
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "2 = 2 Schläge"
+        },
+        {
+          title: "Zwei Pausen im Marsch",
+          notes: [
+            { key: "e/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/5", duration: "qr", name: "Viertelpause", beats: 1 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "1 + 1 = 2 Schläge"
+        },
+        {
+          title: "Achtel und Pause",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "½ + ½ + 1 = 2 Schläge"
+        },
+        {
+          title: "Kurzer Stillstand",
+          notes: [
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "e/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 4,
+          targetBeats: [2.0],
+          formula: "1 + 1 = 2 Schläge"
+        }
+      ],
+      4: [
+        {
+          title: "3 Takte Marsch-Challenge (6 Schläge)",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/5", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 6,
+          targetBeats: [2.0, 4.0],
+          formula: "Takt 1: 1+1=2 | Takt 2: 2=2 | Takt 3: 1+1=2"
+        },
+        {
+          title: "Drei Takte mit Achteln",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 }
+          ],
+          totalBeats: 6,
+          targetBeats: [2.0, 4.0],
+          formula: "Takt 1: ½+½+1=2 | Takt 2: 2=2 | Takt 3: ½+½+1=2"
+        },
+        {
+          title: "Marsch durch drei Stationen",
+          notes: [
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 6,
+          targetBeats: [2.0, 4.0],
+          formula: "Takt 1: 2=2 | Takt 2: 1+1=2 | Takt 3: 2=2"
+        },
+        {
+          title: "Marsch mit Viertelpause",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "qr", name: "Viertelpause", beats: 1 },
+            { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+            { key: "c/5", duration: "h", name: "Halbe", beats: 2 }
+          ],
+          totalBeats: 6,
+          targetBeats: [2.0, 4.0],
+          formula: "Takt 1: 1+1=2 | Takt 2: 2=2 | Takt 3: 2=2"
+        }
+      ]
+    }
+  },
 
-      '6/8': {
-        beatsPerMeasure: 3.0,
-        meterName: '6/8-Takt',
-        meterLabel: 'Sechsachteltakt (Wiegetakt)',
-        countRule: '6 Achtel (3 Viertelschläge)',
-        levels: {
-          1: [
-            {
-              title: "Sechs Achtel im Boot",
-              notes: [
-                { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
-              ],
-              totalBeats: 6,
-              targetBeats: [3.0],
-              formula: "6 × ½ = 3 Schläge (6 Achtel)"
-            }
+  '6/8': {
+    beatsPerMeasure: 3.0,
+    meterName: '6/8-Takt',
+    meterLabel: 'Sechsachteltakt (Wiegetakt)',
+    countRule: '6 Achtel (3 Viertelschläge)',
+    levels: {
+      1: [
+        {
+          title: "Sechs Achtel im Boot",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
           ],
-          2: [
-            {
-              title: "Viertel und Achtel im 6/8",
-              notes: [
-                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
-              ],
-              totalBeats: 6,
-              targetBeats: [3.0],
-              formula: "(1 + ½) + (1 + ½) = 3 Schläge (6 Achtel)"
-            }
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "6 × ½ = 3 Schläge (6 Achtel)"
+        },
+        {
+          title: "Punktierte Halbe wiegt sich",
+          notes: [
+            { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 }
           ],
-          3: [
-            {
-              title: "Zwei punktierte Viertelnoten",
-              notes: [
-                { key: "e/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
-                { key: "g/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
-                { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
-              ],
-              totalBeats: 6,
-              targetBeats: [3.0],
-              formula: "1½ + 1½ = 3 Schläge (6 Achtel)"
-            }
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "3 = 3 Schläge (6 Achtel)"
+        },
+        {
+          title: "Zweimal sechs Achtel",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "c/5", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
           ],
-          4: [
-            {
-              title: "3 Takte Sechsachtel-Challenge",
-              notes: [
-                { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
-                { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
-                { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
-              ],
-              totalBeats: 9,
-              targetBeats: [3.0, 6.0],
-              formula: "Takt 1: 3=3 | Takt 2: 1+½+1+½=3 | Takt 3: 3=3"
-            }
-          ]
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "6 × ½ = 3 Schläge"
+        },
+        {
+          title: "Ruhige Wellen",
+          notes: [
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+            { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "3 = 3 Schläge"
+        },
+        {
+          title: "Die Schaukel im Wind",
+          notes: [
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "6 × ½ = 3 Schläge"
         }
-      }
-    };
+      ],
+      2: [
+        {
+          title: "Viertel und Achtel im 6/8",
+          notes: [
+            { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "(1 + ½) + (1 + ½) = 3 Schläge (6 Achtel)"
+        },
+        {
+          title: "Achtel vor Viertel",
+          notes: [
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "(½ + 1) + (½ + 1) = 3 Schläge"
+        },
+        {
+          title: "Drei Achtel und Viertel-Achtel",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "c/5", duration: "q", name: "Viertel", beats: 1 },
+            { key: "b/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "a/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "(½ + ½ + ½) + (1 + ½) = 3 Schläge"
+        },
+        {
+          title: "Viertel-Achtel doppelt",
+          notes: [
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "(1 + ½) + (1 + ½) = 3 Schläge"
+        },
+        {
+          title: "Im Reigen",
+          notes: [
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "(1 + ½) + (½ + ½ + ½) = 3 Schläge"
+        }
+      ],
+      3: [
+        {
+          title: "Zwei punktierte Viertelnoten",
+          notes: [
+            { key: "e/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "g/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1½ + 1½ = 3 Schläge (6 Achtel)"
+        },
+        {
+          title: "Punktierte Viertel mit drei Achteln",
+          notes: [
+            { key: "c/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1½ + ½ + ½ + ½ = 3 Schläge"
+        },
+        {
+          title: "Vier punktierte Viertel",
+          notes: [
+            { key: "g/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "e/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "f/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "d/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1½ + 1½ = 3 Schläge"
+        },
+        {
+          title: "Punktierte Viertel und Viertel-Achtel",
+          notes: [
+            { key: "c/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1½ + 1 + ½ = 3 Schläge"
+        },
+        {
+          title: "Festlicher Ausklang",
+          notes: [
+            { key: "g/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "c/5", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 6,
+          targetBeats: [3.0],
+          formula: "1½ + 1½ = 3 Schläge"
+        }
+      ],
+      4: [
+        {
+          title: "3 Takte Sechsachtel-Challenge",
+          notes: [
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 9,
+          targetBeats: [3.0, 6.0],
+          formula: "Takt 1: 3=3 | Takt 2: 1+½+1+½=3 | Takt 3: 3=3"
+        },
+        {
+          title: "Achtel-Wellen über drei Takte",
+          notes: [
+            { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "e/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 9,
+          targetBeats: [3.0, 6.0],
+          formula: "Takt 1: 3=3 | Takt 2: 1½+1½=3 | Takt 3: 3=3"
+        },
+        {
+          title: "Drei Takte im Wiegeschritt",
+          notes: [
+            { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+            { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+            { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 9,
+          targetBeats: [3.0, 6.0],
+          formula: "Takt 1: 1+½+1½=3 | Takt 2: 3=3 | Takt 3: 3=3"
+        },
+        {
+          title: "Großer 6/8-Klang",
+          notes: [
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+            { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+          ],
+          totalBeats: 9,
+          targetBeats: [3.0, 6.0],
+          formula: "Takt 1: 3=3 | Takt 2: 6×½=3 | Takt 3: 3=3"
+        }
+      ]
+    }
+  }
+};
 
     /* ==========================================================================
        App State
@@ -1775,8 +2491,10 @@
       isCompleted: false,
       isPlayingAudio: false,
       sandboxBlocks: [],
-      slotPositions: [] // Speichert xMid für jede Lücke
+      slotPositions: []
     };
+
+    let autoAdvanceTimer = null;
 
     /* --- Audio Synthesizer --- */
     let audioCtx = null;
@@ -2198,6 +2916,10 @@
        ========================================================================== */
 
     window.selectMeter = function (meter) {
+      if (autoAdvanceTimer) {
+        clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+      }
       state.currentMeter = meter;
       document.querySelectorAll('.meter-btn').forEach(function (b) {
         b.classList.remove('active');
@@ -2212,6 +2934,10 @@
     };
 
     window.selectLevel = function (level) {
+      if (autoAdvanceTimer) {
+        clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+      }
       state.currentLevel = level;
       document.querySelectorAll('.level-tab').forEach(function (t) {
         t.classList.remove('active');
@@ -2222,6 +2948,10 @@
     };
 
     window.nextExercise = function () {
+      if (autoAdvanceTimer) {
+        clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+      }
       loadExercise(state.currentMeter, state.currentLevel, state.exerciseIndex + 1);
     };
 
@@ -2292,13 +3022,27 @@
           );
 
           const nextBtn = document.getElementById('next-task-btn');
-          if (nextBtn) nextBtn.classList.add('pulse');
-
-          if (state.score === 5 || state.score === 10) {
-            setTimeout(function () {
-              showMilestoneModal(state.score);
-            }, 600);
+          if (nextBtn) {
+            nextBtn.classList.add('pulse');
+            nextBtn.innerHTML = '<span>Nächste Aufgabe in 2s</span> 🚀';
           }
+
+          const meterCfg = EXERCISE_CATALOG[state.currentMeter];
+          const list = meterCfg.levels[state.currentLevel] || meterCfg.levels[1];
+          const isEndOfLevel = (state.exerciseIndex + 1) >= list.length;
+
+          if (isEndOfLevel || state.score % 5 === 0) {
+            setTimeout(function () {
+              showMilestoneModal(state.score, isEndOfLevel);
+            }, 600);
+          } else {
+            // Automatischer Übergang zur nächsten Aufgabe nach 1.8 Sekunden
+            if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+            autoAdvanceTimer = setTimeout(function () {
+              window.nextExercise();
+            }, 1800);
+          }
+
         } else {
           showFeedback(
             'success',
@@ -2321,13 +3065,27 @@
           }, 400);
         }
 
+        // Pädagogisch saubere Erklärung abhängig vom aktuellen Takt
+        let lastTarget = 0;
+        let nextTarget = targetBeatsList[0];
+        for (let t = 0; t < targetBeatsList.length; t++) {
+          if (beatsSoFar > targetBeatsList[t]) {
+            lastTarget = targetBeatsList[t];
+            nextTarget = targetBeatsList[t + 1] || (lastTarget + beatsPerMeasure);
+          } else {
+            nextTarget = targetBeatsList[t];
+            break;
+          }
+        }
+
+        const beatsInMeasure = beatsSoFar - lastTarget;
+        const measureNum = Math.floor(lastTarget / beatsPerMeasure) + 1;
         let hintText = '';
-        if (beatsSoFar < beatsPerMeasure) {
-          hintText = 'Hier sind es erst ' + formatFraction(beatsSoFar) + ' Schläge. Für einen ' + state.currentMeter + '-Takt brauchst du genau ' + formatFraction(beatsPerMeasure) + ' Schläge (dir fehlen noch ' + formatFraction(beatsPerMeasure - beatsSoFar) + ')!';
-        } else if (beatsSoFar > beatsPerMeasure && beatsSoFar < (beatsPerMeasure * 2)) {
-          hintText = 'Halt, das sind schon ' + formatFraction(beatsSoFar) + ' Schläge! Ein ' + state.currentMeter + '-Takt fasst nur ' + formatFraction(beatsPerMeasure) + ' Schläge. Geh nach links zurück!';
+
+        if (beatsInMeasure < beatsPerMeasure) {
+          hintText = (targetBeatsList.length > 1 ? 'In Takt ' + measureNum + ' sind' : 'Hier sind') + ' es erst ' + formatFraction(beatsInMeasure) + ' Schläge. Für einen ' + state.currentMeter + '-Takt brauchst du genau ' + formatFraction(beatsPerMeasure) + ' Schläge (dir fehlen noch ' + formatFraction(beatsPerMeasure - beatsInMeasure) + ')!';
         } else {
-          hintText = 'Hier sind es ' + formatFraction(beatsSoFar) + ' Schläge. Zähle noch einmal genau nach!';
+          hintText = (targetBeatsList.length > 1 ? 'In Takt ' + measureNum + ' sind' : 'Hier sind') + ' das schon ' + formatFraction(beatsInMeasure) + ' Schläge! Ein ' + state.currentMeter + '-Takt fasst nur ' + formatFraction(beatsPerMeasure) + ' Schläge. Geh nach links zurück!';
         }
 
         if (beatsSoFar % 1 !== 0) {
@@ -2571,7 +3329,10 @@
       if (missInfo) missInfo.textContent = '📍 ' + missingCount + ' Taktstrich' + (missingCount > 1 ? 'e fehlen' : ' fehlt') + '!';
 
       const nextBtn = document.getElementById('next-task-btn');
-      if (nextBtn) nextBtn.classList.remove('pulse');
+      if (nextBtn) {
+        nextBtn.classList.remove('pulse');
+        nextBtn.innerHTML = '<span>Nächste Aufgabe</span> ➡️';
+      }
 
       showFeedback(
         'neutral',
@@ -2704,7 +3465,7 @@
             ctx.fillStyle = p.color;
             ctx.globalAlpha = p.opacity;
             ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-            ctx.restore;
+            ctx.restore();
           }
         });
 
@@ -2718,13 +3479,21 @@
       updateConfetti();
     }
 
-    function showMilestoneModal(stars) {
+    function showMilestoneModal(stars, isEndOfLevel) {
       const modal = document.getElementById('milestone-modal');
       const title = document.getElementById('modal-title');
       const desc = document.getElementById('modal-desc');
+      const btn = document.getElementById('modal-close-btn');
 
-      if (title) title.textContent = '🌟 ' + stars + ' Sterne gesammelt!';
-      if (desc) desc.textContent = 'Klasse! Du meisterst die Taktarten schon wie eine echte Musik-Meisterin! Weiter so!';
+      if (isEndOfLevel) {
+        if (title) title.textContent = '🏆 Stufe ' + state.currentLevel + ' gemeistert!';
+        if (desc) desc.textContent = 'Klasse! Du hast alle Aufgaben dieser Stufe gelöst! Klicke unten, um weiterzumachen!';
+        if (btn) btn.textContent = 'Nächste Stufe starten! 🚀';
+      } else {
+        if (title) title.textContent = '🌟 ' + stars + ' Sterne gesammelt!';
+        if (desc) desc.textContent = 'Fantastisch! Du meisterst die Taktarten schon wie eine echte Musik-Meisterin! Weiter so!';
+        if (btn) btn.textContent = 'Weiter üben! 🚀';
+      }
 
       if (modal) modal.classList.add('active');
       playSuccessChime();
@@ -2732,9 +3501,10 @@
     }
 
     /* ==========================================================================
-       Globales Event-Delegation-System (Fängt jeden Klick garantiert ab)
+       Globales Event-Delegation-System (Keine Mehrfachauslösung mehr)
        ========================================================================== */
     let totalClicks = 0;
+    let lastClickTimestamp = 0;
 
     function logAction(txt) {
       const el = document.getElementById('debug-last-action');
@@ -2755,6 +3525,8 @@
     }
 
     document.addEventListener('click', function (e) {
+      const now = Date.now();
+      // Klickzähler und Welleneffekt
       totalClicks++;
       const counterEl = document.getElementById('debug-click-count');
       if (counterEl) counterEl.textContent = totalClicks.toString();
@@ -2876,7 +3648,7 @@
         return;
       }
 
-      // 13. Urkunde Weiter (.modal-card button)
+      // 13. Urkunde Weiter (#modal-close-btn)
       const modalBtn = e.target.closest('#modal-close-btn');
       if (modalBtn) {
         window.closeModal();
