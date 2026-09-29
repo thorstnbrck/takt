@@ -57,6 +57,10 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html, body, button, .level-tab, .meter-btn, .slot-pill-btn, .barline-slot, .sheet-wrapper, svg, .btn, .note-card, .sandbox-chip-btn {
+      touch-action: manipulation;
+    }
+
     body {
       font-family: var(--font-body);
       background: 
@@ -1239,6 +1243,19 @@
     }
 
     @media (max-width: 768px) {
+      body::before,
+      body::after {
+        filter: blur(35px) !important;
+        opacity: 0.3 !important;
+        animation: none !important; /* Deaktiviert Dauer-Animation auf Mobilgeräten für verzögerungsfreies Rendering */
+      }
+      :root {
+        --glass-blur: blur(8px);
+        --glass-blur-sm: blur(6px);
+      }
+      .sheet-wrapper {
+        -webkit-overflow-scrolling: touch;
+      }
       .meter-buttons {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -3101,6 +3118,22 @@
       return audioCtx;
     }
 
+    // iOS Safari AudioContext Vorab-Aktivierung beim ersten Fingertipp
+    if (typeof window !== 'undefined') {
+      const unlockAudioTouch = function () {
+        try {
+          const ctx = getAudioContext();
+          if (ctx && ctx.state === 'suspended') {
+            ctx.resume();
+          }
+        } catch (e) {}
+        window.removeEventListener('touchstart', unlockAudioTouch);
+        window.removeEventListener('pointerdown', unlockAudioTouch);
+      };
+      window.addEventListener('touchstart', unlockAudioTouch, { passive: true, once: true });
+      window.addEventListener('pointerdown', unlockAudioTouch, { passive: true, once: true });
+    }
+
     function playTone(freq, durationSec, type, gainVal) {
       if (!state.soundEnabled) return;
       type = type || 'sine';
@@ -3926,7 +3959,31 @@
       if (isCorrect) {
         state.placedBarlines.add(slotIndex);
         playSuccessChime();
-        triggerConfetti(window.innerWidth / 2, window.innerHeight / 2);
+
+        // Exakte Koordinaten des gesetzten Taktstrichs ermitteln für zentriertes Konfetti
+        let confettiX = window.innerWidth / 2;
+        let confettiY = window.innerHeight / 2;
+        const clickedSlotEl = document.querySelector('.barline-slot[data-slot-index="' + slotIndex + '"]') ||
+                              document.querySelector('.slot-pill-btn[data-slot-index="' + slotIndex + '"]');
+        if (clickedSlotEl) {
+          const sRect = clickedSlotEl.getBoundingClientRect();
+          confettiX = sRect.left + sRect.width / 2;
+          confettiY = sRect.top + sRect.height / 2;
+        }
+        triggerConfetti(confettiX, confettiY);
+
+        const remainingBarlines = Math.max(0, targetBeatsList.length - state.placedBarlines.size);
+        const missInfo = document.getElementById('missing-info');
+        if (missInfo) {
+          if (remainingBarlines === 0) {
+            missInfo.textContent = '✓ Alle Taktstriche gesetzt!';
+            missInfo.style.color = '#059669';
+            missInfo.style.background = 'rgba(16, 185, 129, 0.14)';
+            missInfo.style.borderColor = 'rgba(16, 185, 129, 0.35)';
+          } else {
+            missInfo.textContent = '📍 Noch ' + remainingBarlines + ' Taktstrich' + (remainingBarlines > 1 ? 'e fehlen' : ' fehlt') + '!';
+          }
+        }
 
         const isAllPlaced = targetBeatsList.every(function (target) {
           let sum = 0;
@@ -3954,23 +4011,23 @@
           const nextBtn = document.getElementById('next-task-btn');
           if (nextBtn) {
             nextBtn.classList.add('pulse');
-            nextBtn.innerHTML = '<span>Nächste Aufgabe in 2s</span> 🚀';
+            nextBtn.innerHTML = '<span>Nächste Aufgabe in 1.5s</span> 🚀';
           }
 
           const meterCfg = EXERCISE_CATALOG[state.currentMeter];
-          const list = meterCfg.levels[state.currentLevel] || meterCfg.levels[1];
+          const list = (meterCfg && meterCfg.levels[state.currentLevel]) ? meterCfg.levels[state.currentLevel] : meterCfg.levels[1];
           const isEndOfLevel = (state.exerciseIndex + 1) >= list.length;
 
-          if (isEndOfLevel || state.score % 5 === 0) {
+          if (isEndOfLevel) {
             setTimeout(function () {
-              showMilestoneModal(state.score, isEndOfLevel);
+              showMilestoneModal(state.score, true);
             }, 600);
           } else {
-            // Automatischer Übergang zur nächsten Aufgabe nach 1.8 Sekunden
+            // Automatischer Übergang zur nächsten Aufgabe nach 1.5 Sekunden
             if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
             autoAdvanceTimer = setTimeout(function () {
               window.nextExercise();
-            }, 1800);
+            }, 1500);
           }
 
         } else {
@@ -4088,7 +4145,20 @@
     window.closeModal = function () {
       const modal = document.getElementById('milestone-modal');
       if (modal) modal.classList.remove('active');
-      window.nextExercise();
+
+      const meterCfg = EXERCISE_CATALOG[state.currentMeter];
+      const list = (meterCfg && meterCfg.levels[state.currentLevel]) ? meterCfg.levels[state.currentLevel] : [];
+      const isEndOfLevel = (state.exerciseIndex + 1) >= list.length;
+
+      if (isEndOfLevel) {
+        if (state.currentLevel < 4) {
+          window.selectLevel(state.currentLevel + 1);
+        } else {
+          window.startExam();
+        }
+      } else {
+        window.nextExercise();
+      }
     };
 
     /* ==========================================================================
@@ -4361,25 +4431,38 @@
       }
     }
 
+    let confettiParticles = [];
+    let confettiAnimId = null;
+
     function triggerConfetti(originX, originY) {
       const canvas = document.getElementById('confetti-canvas');
       if (!canvas) return;
-      canvas.style.display = 'block';
 
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+      }
+
+      canvas.style.display = 'block';
       const ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+
+      const x = (typeof originX === 'number' && originX > 0 && originX < w) ? originX : w / 2;
+      const y = (typeof originY === 'number' && originY > 0 && originY < h) ? originY : h / 3;
 
       const colors = ['#f59e0b', '#10b981', '#6366f1', '#ec4899', '#3b82f6'];
-      const particles = [];
-
-      for (let i = 0; i < 45; i++) {
-        particles.push({
-          x: originX || window.innerWidth / 2,
-          y: originY || window.innerHeight / 2,
-          vx: (Math.random() - 0.5) * 12,
-          vy: (Math.random() - 0.7) * 14,
-          size: Math.random() * 8 + 4,
+      for (let i = 0; i < 36; i++) {
+        confettiParticles.push({
+          x: x * dpr,
+          y: y * dpr,
+          vx: (Math.random() - 0.5) * 12 * dpr,
+          vy: (Math.random() * -12 - 4) * dpr,
+          size: (Math.random() * 7 + 4) * dpr,
           color: colors[Math.floor(Math.random() * colors.length)],
           rotation: Math.random() * 360,
           rotSpeed: (Math.random() - 0.5) * 10,
@@ -4387,37 +4470,44 @@
         });
       }
 
-      function updateConfetti() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        let stillAlive = false;
-
-        particles.forEach(function (p) {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy += 0.35;
-          p.rotation += p.rotSpeed;
-          p.opacity -= 0.018;
-
-          if (p.opacity > 0) {
-            stillAlive = true;
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate((p.rotation * Math.PI) / 180);
-            ctx.fillStyle = p.color;
-            ctx.globalAlpha = p.opacity;
-            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-            ctx.restore();
-          }
-        });
-
-        if (stillAlive) {
-          requestAnimationFrame(updateConfetti);
-        } else {
+      if (!confettiAnimId) {
+        function updateConfetti() {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          canvas.style.display = 'none';
+          let stillAlive = false;
+
+          for (let i = confettiParticles.length - 1; i >= 0; i--) {
+            const p = confettiParticles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.35 * dpr;
+            p.rotation += p.rotSpeed;
+            p.opacity -= 0.02;
+
+            if (p.opacity > 0) {
+              stillAlive = true;
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.rotate((p.rotation * Math.PI) / 180);
+              ctx.fillStyle = p.color;
+              ctx.globalAlpha = p.opacity;
+              ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+              ctx.restore();
+            } else {
+              confettiParticles.splice(i, 1);
+            }
+          }
+
+          if (stillAlive && confettiParticles.length > 0) {
+            confettiAnimId = requestAnimationFrame(updateConfetti);
+          } else {
+            confettiParticles = [];
+            confettiAnimId = null;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = 'none';
+          }
         }
+        confettiAnimId = requestAnimationFrame(updateConfetti);
       }
-      updateConfetti();
     }
 
     function showMilestoneModal(stars, isEndOfLevel) {
@@ -4427,13 +4517,25 @@
       const btn = document.getElementById('modal-close-btn');
 
       if (isEndOfLevel) {
-        if (title) title.textContent = '🏆 Stufe ' + state.currentLevel + ' gemeistert!';
-        if (desc) desc.textContent = 'Klasse! Du hast alle Aufgaben dieser Stufe gelöst! Klicke unten, um weiterzumachen!';
-        if (btn) btn.textContent = 'Nächste Stufe starten! 🚀';
+        if (state.currentLevel < 4) {
+          const nextLvlNames = {
+            1: 'Stufe 2 (Achtelnoten ♫)',
+            2: 'Stufe 3 (Pausen & Ganze Noten)',
+            3: 'Stufe 4 (3-Takte-Challenge 👑)'
+          };
+          const nextLvl = state.currentLevel + 1;
+          if (title) title.textContent = '🏆 Stufe ' + state.currentLevel + ' gemeistert!';
+          if (desc) desc.textContent = 'Klasse Leistung! Du hast alle Aufgaben dieser Stufe gelöst! Weiter geht es mit ' + (nextLvlNames[state.currentLevel] || 'Stufe ' + nextLvl) + '!';
+          if (btn) btn.innerHTML = '<span>Weiter zu Stufe ' + nextLvl + '!</span> 🚀';
+        } else {
+          if (title) title.textContent = '👑 3-Takte-Challenge gemeistert!';
+          if (desc) desc.textContent = 'Unglaublich! Du hast alle 4 Stufen komplett durchgespielt! Du bist jetzt perfekt vorbereitet für die Klassenarbeit!';
+          if (btn) btn.innerHTML = '<span>🎓 Zur Klassenarbeit-Prüfung!</span> 🚀';
+        }
       } else {
-        if (title) title.textContent = '🌟 ' + stars + ' Sterne gesammelt!';
-        if (desc) desc.textContent = 'Fantastisch! Du meisterst die Taktarten schon wie eine echte Musik-Meisterin! Weiter so!';
-        if (btn) btn.textContent = 'Weiter üben! 🚀';
+        if (title) title.textContent = '🌟 Weiter so!';
+        if (desc) desc.textContent = 'Klasse gerechnet!';
+        if (btn) btn.innerHTML = '<span>Nächste Aufgabe!</span> 🚀';
       }
 
       if (modal) modal.classList.add('active');
