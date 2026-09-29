@@ -1,0 +1,2915 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Takt-Meisterin – Spielerisch Taktarten lernen</title>
+
+  <!-- Google Fonts mit Fallback auf Systemschrift -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       CSS Custom Properties (Theme & Farben)
+       ========================================================================== */
+    :root {
+      --bg-gradient-start: #eef2ff;
+      --bg-gradient-end: #fdf4ff;
+      --card-bg: #ffffff;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-dark: #059669;
+      --success-light: #d1fae5;
+      --warning: #f59e0b;
+      --warning-dark: #d97706;
+      --warning-light: #fef3c7;
+      --danger: #ef4444;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 25px -3px rgba(79, 70, 229, 0.08);
+      --shadow-lg: 0 20px 35px -5px rgba(79, 70, 229, 0.12);
+      --font-heading: 'Fredoka', cursive, system-ui, sans-serif;
+      --font-body: 'Nunito', system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 16px 14px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.5;
+    }
+
+    /* Klick-Wellenanimation (visuelles Klick-Feedback) */
+    .click-ripple {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none !important;
+      z-index: 999999;
+      transform: translate(-50%, -50%) scale(0);
+      animation: rippleAnim 0.35s ease-out forwards;
+      background: radial-gradient(circle, rgba(79, 70, 229, 0.5) 0%, rgba(99, 102, 241, 0) 70%);
+      width: 50px;
+      height: 50px;
+    }
+    @keyframes rippleAnim {
+      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+    }
+
+    /* Live-Statusleiste ganz oben */
+    .live-status-bar {
+      width: 100%;
+      max-width: 880px;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.88rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+      transition: background 0.3s;
+    }
+    .live-status-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .live-status-badge {
+      background: rgba(255, 255, 255, 0.22);
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none !important;
+      z-index: 9999;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 880px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Kopfbereich */
+    .app-header {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 18px 26px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      border: 2px solid rgba(224, 231, 255, 0.8);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      font-size: 2.4rem;
+      background: var(--primary-light);
+      width: 54px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .brand-title {
+      font-family: var(--font-heading);
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stats-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      padding: 8px 14px;
+      border-radius: 30px;
+      border: 1.5px solid #e2e8f0;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .star-icon {
+      color: #eab308;
+      font-size: 1.25rem;
+    }
+
+    .streak-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fffbeb;
+      padding: 8px 14px;
+      border-radius: 30px;
+      border: 1.5px solid #fde68a;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #b45309;
+    }
+
+    .audio-toggle-btn {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.25rem;
+      transition: all 0.2s;
+    }
+
+    .audio-toggle-btn:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      transform: scale(1.08);
+    }
+
+    /* Taktart-Auswahl */
+    .meter-selector-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid #e0e7ff;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .meter-selector-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .meter-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .meter-btn {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .meter-btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+      background: #f8fafc;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+    }
+
+    .meter-btn:active {
+      transform: translateY(0);
+    }
+
+    .meter-btn.active {
+      border-color: var(--primary);
+      background: #eef2ff;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.22);
+    }
+
+    .meter-fraction-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 0.95;
+      background: #f1f5f9;
+      width: 38px;
+      height: 44px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      color: var(--text-main);
+      flex-shrink: 0;
+    }
+
+    .meter-btn.active .meter-fraction-box {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary-hover);
+    }
+
+    .meter-btn-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meter-btn-name {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .meter-btn-desc {
+      font-size: 0.78rem;
+      font-weight: 600;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    /* Anleitungs-Banner */
+    .instruction-card {
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 22px 28px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .instruction-card::after {
+      content: '𝄞';
+      position: absolute;
+      right: 15px;
+      bottom: -30px;
+      font-size: 11rem;
+      color: rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+      font-family: serif;
+    }
+
+    .instruction-card h2 {
+      font-family: var(--font-heading);
+      font-size: 1.55rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.25;
+      position: relative;
+      z-index: 1;
+    }
+
+    .instruction-card p {
+      font-size: 1.05rem;
+      opacity: 0.95;
+      max-width: 660px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .instruction-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .instruction-step {
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(4px);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* Schwierigkeitsstufen */
+    .level-tabs {
+      display: flex;
+      gap: 8px;
+      background: #e2e8f0;
+      padding: 4px;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+    }
+
+    .level-tab {
+      flex: 1;
+      min-width: 130px;
+      background: transparent;
+      border: none;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-heading);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .level-tab:hover {
+      color: var(--primary);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .level-tab.active {
+      background: #ffffff;
+      color: var(--primary);
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Notenblatt-Hauptbereich */
+    .score-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      border: 2px solid #e0e7ff;
+    }
+
+    .score-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed #f1f5f9;
+      padding-bottom: 12px;
+    }
+
+    .task-badge {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .missing-info {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #6366f1;
+      background: #eef2ff;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .sheet-wrapper {
+      width: 100%;
+      background: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 10px 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    #notation-container {
+      width: 100%;
+      min-width: 680px;
+      height: 190px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    #notation-container svg {
+      overflow: visible;
+      cursor: pointer;
+    }
+
+    /* Klickbare Zielzonen im SVG */
+    .barline-slot {
+      cursor: pointer !important;
+      outline: none;
+    }
+
+    .barline-slot .slot-hitbox {
+      fill: rgba(79, 70, 229, 0.001) !important;
+      cursor: pointer !important;
+      transition: fill 0.15s ease;
+    }
+
+    .barline-slot:hover .slot-hitbox {
+      fill: rgba(79, 70, 229, 0.16) !important;
+    }
+
+    .barline-slot .slot-guide {
+      stroke: #818cf8;
+      stroke-width: 3.5;
+      stroke-dasharray: 4, 4;
+      opacity: 0.4;
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+
+    .barline-slot:hover .slot-guide {
+      stroke: #4f46e5;
+      stroke-dasharray: 6, 2;
+      stroke-width: 4;
+      opacity: 1;
+      filter: drop-shadow(0 0 6px rgba(79, 70, 229, 0.6));
+    }
+
+    .barline-slot .slot-badge {
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+
+    .barline-slot:hover .slot-badge {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .barline-slot.wobble {
+      animation: wobbleAnim 0.4s ease-in-out;
+    }
+
+    @keyframes wobbleAnim {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    .placed-barline {
+      stroke: #1e293b;
+      stroke-width: 3.5;
+      stroke-linecap: square;
+      animation: barlineDrop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+    }
+
+    @keyframes barlineDrop {
+      0% {
+        stroke-dasharray: 80;
+        stroke-dashoffset: 80;
+        opacity: 0;
+      }
+      100% {
+        stroke-dasharray: 80;
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+    }
+
+    /* Klickbare Pill-Buttons direkt unter der Notenzeile */
+    .slot-buttons-row {
+      width: 100%;
+      min-width: 680px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2px;
+      margin-bottom: 6px;
+      position: relative;
+      height: 36px;
+    }
+
+    .slot-pill-btn {
+      position: absolute;
+      transform: translateX(-50%);
+      background: #eef2ff;
+      border: 1.5px solid #818cf8;
+      color: #4338ca;
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 14px;
+      cursor: pointer !important;
+      transition: all 0.2s;
+      white-space: nowrap;
+      z-index: 5;
+    }
+
+    .slot-pill-btn:hover {
+      background: #4f46e5;
+      color: white;
+      border-color: #4338ca;
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+    }
+
+    .slot-pill-btn:active {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .slot-pill-btn.placed {
+      background: #10b981;
+      color: white;
+      border-color: #059669;
+      cursor: default !important;
+      box-shadow: none;
+    }
+
+    /* Zähl-Chips unter den Noten */
+    .beat-labels-row {
+      width: 100%;
+      min-width: 680px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 4px 40px;
+      background: #f8fafc;
+      border-radius: var(--radius-sm);
+      margin-top: 2px;
+    }
+
+    .beat-chip {
+      background: #e2e8f0;
+      color: #334155;
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      transition: all 0.2s;
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .beat-chip.active-beat {
+      background: #6366f1;
+      color: white;
+      transform: scale(1.15);
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    }
+
+    .note-element {
+      transition: transform 0.15s ease;
+    }
+
+    .note-element.note-highlight ellipse,
+    .note-element.note-highlight text {
+      fill: #4f46e5 !important;
+      filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.8));
+    }
+
+    /* Feedback Banner */
+    .feedback-banner {
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    .feedback-banner.neutral {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      color: #334155;
+    }
+
+    .feedback-banner.success {
+      background: #d1fae5;
+      border: 2px solid #34d399;
+      color: #065f46;
+      animation: popSuccess 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popSuccess {
+      0% { transform: scale(0.97); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .feedback-banner.warning {
+      background: #fef3c7;
+      border: 2px solid #fbbf24;
+      color: #92400e;
+      animation: shakeWarning 0.35s ease-in-out;
+    }
+
+    @keyframes shakeWarning {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+
+    .feedback-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .feedback-text-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feedback-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .feedback-detail {
+      font-size: 0.95rem;
+      margin-top: 2px;
+      opacity: 0.95;
+    }
+
+    /* Steuerungs-Buttons */
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .btn {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #334155;
+      border: 2px solid #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+      transform: translateY(-2px);
+    }
+
+    .btn-audio {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 2px solid #a7f3d0;
+    }
+
+    .btn-audio:hover {
+      background: #d1fae5;
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+    }
+
+    .btn-primary.pulse {
+      animation: buttonPulse 1.6s infinite;
+    }
+
+    @keyframes buttonPulse {
+      0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.6); }
+      70% { box-shadow: 0 0 0 14px rgba(79, 70, 229, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+    }
+
+    /* Noten-Spickzettel & Baukasten */
+    .cheat-sheet-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      border: 2px solid #e0e7ff;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .cheat-sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 12px;
+    }
+
+    .cheat-sheet-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cheat-sheet-tag {
+      background: #eef2ff;
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .note-card {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 14px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+
+    .note-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-sm);
+      background: #ffffff;
+    }
+
+    .note-card.highlight-note {
+      border-color: #6366f1;
+      background: #eef2ff;
+    }
+
+    .note-card-symbol {
+      font-size: 2.4rem;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+    }
+
+    .note-card-name {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .note-card-beats {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin-top: 2px;
+    }
+
+    .note-card-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.25;
+    }
+
+    /* Interaktiver Takt-Baukasten */
+    .sandbox-box {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sandbox-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sandbox-header h4 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .beat-measure-bar {
+      width: 100%;
+      height: 46px;
+      background: #ffffff;
+      border: 2px solid #94a3b8;
+      border-radius: var(--radius-sm);
+      display: flex;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .beat-block {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.88rem;
+      border-right: 2px solid rgba(255, 255, 255, 0.6);
+      transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding: 0 4px;
+    }
+
+    .block-whole { background: #4338ca; }
+    .block-dotted-half { background: #6366f1; }
+    .block-half { background: #3b82f6; }
+    .block-quarter { background: #10b981; }
+    .block-eighth { background: #f59e0b; }
+    .block-rest { background: #64748b; }
+
+    .sandbox-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sandbox-chip-btn {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-main);
+    }
+
+    .sandbox-chip-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .sandbox-chip-btn:active {
+      transform: scale(0.97);
+    }
+
+    .sandbox-status {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #475569;
+      margin-top: 6px;
+    }
+
+    /* Modal Overlay (standardmäßig display:none) */
+    .modal-overlay {
+      display: none !important;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.7);
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex !important;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 36px 30px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 3px solid #818cf8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    @keyframes modalPop {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-icon {
+      font-size: 4rem;
+      line-height: 1;
+      animation: iconWiggle 1.5s ease-in-out infinite;
+    }
+
+    @keyframes iconWiggle {
+      0%, 100% { transform: rotate(0); }
+      25% { transform: rotate(-8deg); }
+      75% { transform: rotate(8deg); }
+    }
+
+    .modal-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .modal-card p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Responsive Anpassungen */
+    @media (max-width: 768px) {
+      .meter-buttons {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .meter-btn {
+        padding: 8px 10px;
+      }
+      .brand-title {
+        font-size: 1.5rem;
+      }
+      .instruction-card {
+        padding: 16px 20px;
+      }
+      .btn {
+        padding: 10px 18px;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Live Status & Klick-Monitor Leiste -->
+  <aside id="app-live-status-bar" class="live-status-bar" aria-label="Systemstatus">
+    <div class="live-status-info">
+      <span>🟢</span>
+      <strong>App aktiv &amp; klickbereit</strong>
+      <span>|</span>
+      <span id="debug-last-action">Bereit! Klicke auf eine Taktart oder Note</span>
+    </div>
+    <div class="live-status-badge">
+      Klicks: <span id="debug-click-count">0</span>
+    </div>
+  </aside>
+
+  <!-- Konfetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-container">
+
+    <!-- Kopfbereich -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">🎵</div>
+        <div>
+          <h1 class="brand-title">Takt-Meisterin</h1>
+          <p class="brand-subtitle">Setze die Taktstriche an die richtige Stelle!</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="stats-badge" title="Richtig gelöste Aufgaben">
+          <span class="star-icon">⭐</span>
+          <span id="score-counter">0</span> Sterne
+        </div>
+        <div class="streak-badge" title="Aktuelle Serie ohne Fehler">
+          <span>🔥</span>
+          <span id="streak-counter">0</span>er-Serie
+        </div>
+        <button id="audio-toggle-btn" class="audio-toggle-btn" onclick="window.toggleAudio()" title="Ton ein- oder ausschalten">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- Taktart-Auswahl -->
+    <section class="meter-selector-card" aria-labelledby="meter-selector-heading">
+      <div class="meter-selector-title">
+        <span>🎵</span>
+        <h3 id="meter-selector-heading">Taktart wählen:</h3>
+      </div>
+      <div class="meter-buttons" role="radiogroup" aria-label="Taktart auswählen">
+        <button class="meter-btn active" data-meter="4/4" onclick="window.selectMeter('4/4')" role="radio" aria-checked="true">
+          <span class="meter-fraction-box">
+            <span>4</span>
+            <span>4</span>
+          </span>
+          <div class="meter-btn-text">
+            <span class="meter-btn-name">4/4-Takt</span>
+            <span class="meter-btn-desc">4 Schläge (Standard)</span>
+          </div>
+        </button>
+
+        <button class="meter-btn" data-meter="3/4" onclick="window.selectMeter('3/4')" role="radio" aria-checked="false">
+          <span class="meter-fraction-box">
+            <span>3</span>
+            <span>4</span>
+          </span>
+          <div class="meter-btn-text">
+            <span class="meter-btn-name">3/4-Takt</span>
+            <span class="meter-btn-desc">3 Schläge (Walzer)</span>
+          </div>
+        </button>
+
+        <button class="meter-btn" data-meter="2/4" onclick="window.selectMeter('2/4')" role="radio" aria-checked="false">
+          <span class="meter-fraction-box">
+            <span>2</span>
+            <span>4</span>
+          </span>
+          <div class="meter-btn-text">
+            <span class="meter-btn-name">2/4-Takt</span>
+            <span class="meter-btn-desc">2 Schläge (Marsch)</span>
+          </div>
+        </button>
+
+        <button class="meter-btn" data-meter="6/8" onclick="window.selectMeter('6/8')" role="radio" aria-checked="false">
+          <span class="meter-fraction-box">
+            <span>6</span>
+            <span>8</span>
+          </span>
+          <div class="meter-btn-text">
+            <span class="meter-btn-name">6/8-Takt</span>
+            <span class="meter-btn-desc">6 Achtel (Wiegetakt)</span>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Anleitungs-Banner -->
+    <section class="instruction-card" aria-labelledby="instruction-title">
+      <h2 id="instruction-title">🎯 Klicke genau dorthin, wo der Taktstrich für den 4/4-Takt hingehört!</h2>
+      <p id="instruction-text">
+        Zähle die Notenwerte von links nach rechts zusammen. Sobald genau <strong>4 Schläge</strong> erreicht sind, ist der Takt voll und der Taktstrich gehört genau dorthin!
+      </p>
+      <div class="instruction-steps">
+        <div class="instruction-step">1️⃣ Notenwerte addieren</div>
+        <div class="instruction-step" id="step-target">2️⃣ Genau 4 Schläge finden</div>
+        <div class="instruction-step">3️⃣ In die Lücke klicken! ✍️</div>
+      </div>
+    </section>
+
+    <!-- Schwierigkeits-Tabs -->
+    <nav class="level-tabs" aria-label="Schwierigkeitsstufe wählen">
+      <button class="level-tab active" data-level="1" onclick="window.selectLevel(1)">🟢 Stufe 1: Viertel &amp; Halbe</button>
+      <button class="level-tab" data-level="2" onclick="window.selectLevel(2)">🟡 Stufe 2: + Achtelnoten (♫)</button>
+      <button class="level-tab" data-level="3" onclick="window.selectLevel(3)">🟣 Stufe 3: + Pausen &amp; Spezielle</button>
+      <button class="level-tab" data-level="4" onclick="window.selectLevel(4)">👑 3-Takte-Challenge</button>
+    </nav>
+
+    <!-- Notenblatt & Interaktive Klickzone -->
+    <main class="score-card">
+      <div class="score-card-header">
+        <span class="task-badge" id="task-indicator">Aufgabe 1 von 3</span>
+        <span class="missing-info" id="missing-info">📍 1 Taktstrich fehlt!</span>
+      </div>
+
+      <div class="sheet-wrapper" id="sheet-wrapper">
+        <div id="notation-container">
+          <!-- SVG Notenlinien und Klickzonen -->
+        </div>
+        <!-- Zusätzliche Klick-Pill-Buttons direkt unter den Noten -->
+        <div class="slot-buttons-row" id="slot-buttons-row">
+          <!-- Dynamische Klick-Buttons -->
+        </div>
+      </div>
+
+      <div class="beat-labels-row" id="beat-labels-row" aria-label="Zählhilfe unter den Noten">
+        <!-- Zähl-Chips -->
+      </div>
+
+      <!-- Feedback Banner -->
+      <div class="feedback-banner neutral" id="feedback-banner" role="status" aria-live="polite">
+        <span class="feedback-icon" id="feedback-icon">💡</span>
+        <div class="feedback-text-wrap">
+          <div class="feedback-title" id="feedback-title">Finde die Schläge!</div>
+          <div class="feedback-detail" id="feedback-detail">Klicke zwischen zwei Noten auf die Notenlinien oder auf die Buttons darunter!</div>
+        </div>
+      </div>
+
+      <!-- Steuerungs-Buttons -->
+      <div class="controls-row">
+        <button class="btn btn-audio" id="play-rhythm-btn" onclick="window.togglePlayRhythm()" title="Höre dir den Rhythmus an">
+          <span>🎵</span> Takt anhören
+        </button>
+        <button class="btn btn-secondary" id="toggle-help-btn" onclick="window.toggleHelp()" title="Zeige oder verstecke die Notenwerte als Hilfe">
+          <span>💡</span> Rechenhilfe: An
+        </button>
+        <button class="btn btn-primary" id="next-task-btn" onclick="window.nextExercise()" title="Lade eine neue Notenkombination">
+          <span>Nächste Aufgabe</span> ➡️
+        </button>
+      </div>
+    </main>
+
+    <!-- Noten-Spickzettel & Takt-Baukasten -->
+    <section class="cheat-sheet-card" aria-labelledby="cheat-sheet-title">
+      <div class="cheat-sheet-header">
+        <div class="cheat-sheet-title">
+          <span>📖</span>
+          <h3 id="cheat-sheet-title">Kleiner Noten-Spickzettel für die 5. Klasse</h3>
+        </div>
+        <span class="cheat-sheet-tag" id="cheat-sheet-meter-tag">4/4-Takt</span>
+      </div>
+
+      <div class="notes-grid" id="notes-grid">
+        <div class="note-card" data-beats="4" data-name="𝅝 Ganze Note (4)" onclick="window.addSandboxNote(4, '𝅝 Ganze Note (4)')" title="Klicke für den Takt-Baukasten">
+          <div class="note-card-symbol">𝅝</div>
+          <div class="note-card-name">Ganze Note</div>
+          <div class="note-card-beats">4 Schläge</div>
+          <div class="note-card-desc">Weißer Kopf ohne Hals. Füllt 1 ganzen 4/4-Takt!</div>
+        </div>
+
+        <div class="note-card" id="card-dotted-half" data-beats="3" data-name="𝅗𝅥. Punktierte Halbe (3)" onclick="window.addSandboxNote(3, '𝅗𝅥. Punktierte Halbe (3)')" title="Klicke für den Takt-Baukasten">
+          <div class="note-card-symbol">𝅗𝅥.</div>
+          <div class="note-card-name">Punktierte Halbe</div>
+          <div class="note-card-beats">3 Schläge (2 + 1)</div>
+          <div class="note-card-desc">Füllt 1 ganzen 3/4-Takt komplett aus!</div>
+        </div>
+
+        <div class="note-card" data-beats="2" data-name="𝅗𝅥 Halbe Note (2)" onclick="window.addSandboxNote(2, '𝅗𝅥 Halbe Note (2)')" title="Klicke für den Takt-Baukasten">
+          <div class="note-card-symbol">𝅗𝅥</div>
+          <div class="note-card-name">Halbe Note</div>
+          <div class="note-card-beats">2 Schläge</div>
+          <div class="note-card-desc">Weißer Kopf mit Hals. Füllt 1 halben 4/4-Takt.</div>
+        </div>
+
+        <div class="note-card" data-beats="1" data-name="𝅘𝅥 Viertelnote (1)" onclick="window.addSandboxNote(1, '𝅘𝅥 Viertelnote (1)')" title="Klicke für den Takt-Baukasten">
+          <div class="note-card-symbol">𝅘𝅥</div>
+          <div class="note-card-name">Viertelnote</div>
+          <div class="note-card-beats">1 Schlag</div>
+          <div class="note-card-desc">Schwarzer Kopf mit Hals. Der Grundschlag.</div>
+        </div>
+
+        <div class="note-card" data-beats="1" data-name="♫ 2 Achtelnoten (1)" onclick="window.addSandboxNote(1, '♫ 2 Achtelnoten (1)')" title="Klicke für den Takt-Baukasten">
+          <div class="note-card-symbol">♫</div>
+          <div class="note-card-name">2 Achtelnoten</div>
+          <div class="note-card-beats">½ + ½ = 1 Schlag</div>
+          <div class="note-card-desc">Mit Balken verbunden. Zwei teilen sich 1 Schlag.</div>
+        </div>
+
+        <div class="note-card" data-beats="1" data-name="𝄽 Viertelpause (1)" onclick="window.addSandboxNote(1, '𝄽 Viertelpause (1)')" title="Klicke für den Takt-Baukasten">
+          <div class="note-card-symbol">𝄽</div>
+          <div class="note-card-name">Viertelpause</div>
+          <div class="note-card-beats">1 Schlag Pause</div>
+          <div class="note-card-desc">1 Schlag Stille. Zählt wie eine Viertelnote!</div>
+        </div>
+      </div>
+
+      <!-- Takt-Baukasten -->
+      <div class="sandbox-box">
+        <div class="sandbox-header">
+          <h4 id="sandbox-header-title">🧩 Interaktiver Takt-Baukasten: Baue deinen 4/4-Takt</h4>
+          <button class="sandbox-chip-btn sandbox-reset-btn" onclick="window.resetSandbox()">🔄 Leeren</button>
+        </div>
+        
+        <div class="beat-measure-bar" id="sandbox-measure-bar" title="Hier werden die Notenwerte addiert!">
+          <!-- Dynamische Blöcke -->
+        </div>
+
+        <div class="sandbox-controls" id="sandbox-controls">
+          <button class="sandbox-chip-btn" data-beats="1" data-name="𝅘𝅥 Viertel (1)" onclick="window.addSandboxNote(1, '𝅘𝅥 Viertel (1)')">+ 𝅘𝅥 Viertel (1)</button>
+          <button class="sandbox-chip-btn" data-beats="2" data-name="𝅗𝅥 Halbe (2)" onclick="window.addSandboxNote(2, '𝅗𝅥 Halbe (2)')">+ 𝅗𝅥 Halbe (2)</button>
+          <button class="sandbox-chip-btn" id="sandbox-add-dotted-half" data-beats="3" data-name="𝅗𝅥. Punktierte Halbe (3)" onclick="window.addSandboxNote(3, '𝅗𝅥. Punktierte Halbe (3)')">+ 𝅗𝅥. Punktierte Halbe (3)</button>
+          <button class="sandbox-chip-btn" data-beats="1" data-name="♫ 2 Achtel (1)" onclick="window.addSandboxNote(1, '♫ 2 Achtel (1)')">+ ♫ 2 Achtel (1)</button>
+          <button class="sandbox-chip-btn" id="sandbox-add-whole" data-beats="4" data-name="𝅝 Ganze (4)" onclick="window.addSandboxNote(4, '𝅝 Ganze (4)')">+ 𝅝 Ganze (4)</button>
+          <button class="sandbox-chip-btn" data-beats="1" data-name="𝄽 Pause (1)" onclick="window.addSandboxNote(1, '𝄽 Pause (1)')">+ 𝄽 Pause (1)</button>
+        </div>
+
+        <div class="sandbox-status" id="sandbox-status-text">
+          Aktuell: 0 Schläge gefüllt. Klicke auf die Bausteine oben!
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Milestone Modal (Urkunde) -->
+  <div class="modal-overlay" id="milestone-modal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-icon">🏆</div>
+      <h3 id="modal-title">Fantastisch gemacht!</h3>
+      <p id="modal-desc">Du hast fleißig Takte gelöst und bist jetzt eine echte Takt-Meisterin!</p>
+      <button class="btn btn-primary" id="modal-close-btn" onclick="window.closeModal()" style="width: 100%;">
+        Weiter üben! 🚀
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       JavaScript Anwendungs-Logik
+       ========================================================================== -->
+  <script>
+    /* Globaler Fehlerschutz: Zeigt Fehler direkt im UI an */
+    window.onerror = function (msg, url, line) {
+      var bar = document.getElementById('app-live-status-bar');
+      if (bar) {
+        bar.style.background = '#dc2626';
+        bar.innerHTML = '<strong>🔴 Script-Fehler: ' + msg + ' (Zeile ' + line + ')</strong>';
+      }
+      return false;
+    };
+
+    /* --- Audio Frequenzen für Notennamen (C4 bis C5) --- */
+    const PITCH_FREQUENCIES = {
+      'c/4': 261.63,
+      'd/4': 293.66,
+      'e/4': 329.63,
+      'f/4': 349.23,
+      'g/4': 392.00,
+      'a/4': 440.00,
+      'b/4': 493.88,
+      'c/5': 523.25,
+      'd/5': 587.33,
+      'e/5': 659.25
+    };
+
+    /* ==========================================================================
+       Aufgaben-Katalog
+       ========================================================================== */
+    const EXERCISE_CATALOG = {
+      '4/4': {
+        beatsPerMeasure: 4.0,
+        meterName: '4/4-Takt',
+        meterLabel: 'Viervierteltakt',
+        countRule: '4 Schläge',
+        levels: {
+          1: [
+            {
+              title: "Melodie mit Viertel- und Halben Noten",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
+              ],
+              totalBeats: 8,
+              targetBeats: [4.0],
+              formula: "1 + 1 + 2 = 4 Schläge"
+            },
+            {
+              title: "Zwei Halbe gegen vier Viertel",
+              notes: [
+                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 }
+              ],
+              totalBeats: 8,
+              targetBeats: [4.0],
+              formula: "2 + 2 = 4 Schläge"
+            },
+            {
+              title: "Der Wiegeschritt in 4/4",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "h", name: "Halbe", beats: 2 }
+              ],
+              totalBeats: 8,
+              targetBeats: [4.0],
+              formula: "1 + 2 + 1 = 4 Schläge"
+            }
+          ],
+          2: [
+            {
+              title: "Lustiger Achtel-Hüpfer",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "f/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+              ],
+              totalBeats: 8,
+              targetBeats: [4.0],
+              formula: "1 + ½ + ½ + 2 = 4 Schläge"
+            },
+            {
+              title: "Vier Achtel auf Wanderschaft",
+              notes: [
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "c/4", duration: "h", name: "Halbe", beats: 2 }
+              ],
+              totalBeats: 8,
+              targetBeats: [4.0],
+              formula: "1 + ½ + ½ + ½ + ½ + 1 = 4 Schläge"
+            }
+          ],
+          3: [
+            {
+              title: "Die majestätische Ganze Note",
+              notes: [
+                { key: "c/5", duration: "w", name: "Ganze Note", beats: 4 },
+                { key: "b/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
+              ],
+              totalBeats: 8,
+              targetBeats: [4.0],
+              formula: "4 = 4 Schläge (Ganze Note füllt den 1. Takt allein!)"
+            },
+            {
+              title: "Pause zum Luftholen",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "b/4", duration: "qr", name: "Viertelpause", beats: 1 },
+                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
+              ],
+              totalBeats: 8,
+              targetBeats: [4.0],
+              formula: "1 + 1 + 2 = 4 Schläge"
+            }
+          ],
+          4: [
+            {
+              title: "Große Melodie in drei Takten",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "d/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "f/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "c/5", duration: "h", name: "Halbe", beats: 2 }
+              ],
+              totalBeats: 12,
+              targetBeats: [4.0, 8.0],
+              formula: "Takt 1: 1+1+2=4 | Takt 2: 2+2=4 | Takt 3: 1+1+2=4"
+            }
+          ]
+        }
+      },
+
+      '3/4': {
+        beatsPerMeasure: 3.0,
+        meterName: '3/4-Takt',
+        meterLabel: 'Dreivierteltakt (Walzer)',
+        countRule: '3 Schläge',
+        levels: {
+          1: [
+            {
+              title: "Schwingender Walzerschritt",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "c/5", duration: "q", name: "Viertel", beats: 1 }
+              ],
+              totalBeats: 6,
+              targetBeats: [3.0],
+              formula: "1 + 2 = 3 Schläge"
+            },
+            {
+              title: "Drei Viertel im Takt",
+              notes: [
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "d/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
+              ],
+              totalBeats: 6,
+              targetBeats: [3.0],
+              formula: "1 + 1 + 1 = 3 Schläge"
+            }
+          ],
+          2: [
+            {
+              title: "Achtelnoten im Walzer",
+              notes: [
+                { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "f/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 }
+              ],
+              totalBeats: 6,
+              targetBeats: [3.0],
+              formula: "½ + ½ + 1 + 1 = 3 Schläge"
+            }
+          ],
+          3: [
+            {
+              title: "Die punktierte Halbe Note (3 Schläge!)",
+              notes: [
+                { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "h", name: "Halbe", beats: 2 }
+              ],
+              totalBeats: 6,
+              targetBeats: [3.0],
+              formula: "3 = 3 Schläge (Punktierte Halbe füllt 1 ganzen 3/4-Takt!)"
+            }
+          ],
+          4: [
+            {
+              title: "3 Takte Walzer-Challenge (9 Schläge)",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+              ],
+              totalBeats: 9,
+              targetBeats: [3.0, 6.0],
+              formula: "Takt 1: 1+2=3 | Takt 2: 1+1+1=3 | Takt 3: 3=3"
+            }
+          ]
+        }
+      },
+
+      '2/4': {
+        beatsPerMeasure: 2.0,
+        meterName: '2/4-Takt',
+        meterLabel: 'Zweivierteltakt (Marsch)',
+        countRule: '2 Schläge',
+        levels: {
+          1: [
+            {
+              title: "Eins, zwei – Marsch!",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
+              ],
+              totalBeats: 4,
+              targetBeats: [2.0],
+              formula: "1 + 1 = 2 Schläge"
+            },
+            {
+              title: "Halbe Note füllt den 1. Takt",
+              notes: [
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 }
+              ],
+              totalBeats: 4,
+              targetBeats: [2.0],
+              formula: "2 = 2 Schläge"
+            }
+          ],
+          2: [
+            {
+              title: "Achtellauf im 2/4-Takt",
+              notes: [
+                { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 }
+              ],
+              totalBeats: 4,
+              targetBeats: [2.0],
+              formula: "½ + ½ + 1 = 2 Schläge"
+            }
+          ],
+          3: [
+            {
+              title: "Pause im 2/4-Takt",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "qr", name: "Viertelpause", beats: 1 },
+                { key: "g/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "c/5", duration: "q", name: "Viertel", beats: 1 }
+              ],
+              totalBeats: 4,
+              targetBeats: [2.0],
+              formula: "1 + 1 = 2 Schläge"
+            }
+          ],
+          4: [
+            {
+              title: "3 Takte Marsch-Challenge (6 Schläge)",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "h", name: "Halbe", beats: 2 },
+                { key: "a/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "c/5", duration: "q", name: "Viertel", beats: 1 }
+              ],
+              totalBeats: 6,
+              targetBeats: [2.0, 4.0],
+              formula: "Takt 1: 1+1=2 | Takt 2: 2=2 | Takt 3: 1+1=2"
+            }
+          ]
+        }
+      },
+
+      '6/8': {
+        beatsPerMeasure: 3.0,
+        meterName: '6/8-Takt',
+        meterLabel: 'Sechsachteltakt (Wiegetakt)',
+        countRule: '6 Achtel (3 Viertelschläge)',
+        levels: {
+          1: [
+            {
+              title: "Sechs Achtel im Boot",
+              notes: [
+                { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "e/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "a/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+              ],
+              totalBeats: 6,
+              targetBeats: [3.0],
+              formula: "6 × ½ = 3 Schläge (6 Achtel)"
+            }
+          ],
+          2: [
+            {
+              title: "Viertel und Achtel im 6/8",
+              notes: [
+                { key: "c/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "d/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "f/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+              ],
+              totalBeats: 6,
+              targetBeats: [3.0],
+              formula: "(1 + ½) + (1 + ½) = 3 Schläge (6 Achtel)"
+            }
+          ],
+          3: [
+            {
+              title: "Zwei punktierte Viertelnoten",
+              notes: [
+                { key: "e/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+                { key: "g/4", duration: "qd", dotted: true, name: "Punktierte Viertel", beats: 1.5 },
+                { key: "c/5", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+              ],
+              totalBeats: 6,
+              targetBeats: [3.0],
+              formula: "1½ + 1½ = 3 Schläge (6 Achtel)"
+            }
+          ],
+          4: [
+            {
+              title: "3 Takte Sechsachtel-Challenge",
+              notes: [
+                { key: "c/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "g/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "e/4", duration: "q", name: "Viertel", beats: 1 },
+                { key: "c/4", duration: "8", name: "Achtel", beats: 0.5 },
+                { key: "g/4", duration: "hd", dotted: true, name: "Punktierte Halbe", beats: 3 }
+              ],
+              totalBeats: 9,
+              targetBeats: [3.0, 6.0],
+              formula: "Takt 1: 3=3 | Takt 2: 1+½+1+½=3 | Takt 3: 3=3"
+            }
+          ]
+        }
+      }
+    };
+
+    /* ==========================================================================
+       App State
+       ========================================================================== */
+    const state = {
+      currentMeter: '4/4',
+      currentLevel: 1,
+      exerciseIndex: 0,
+      score: 0,
+      streak: 0,
+      soundEnabled: true,
+      showHelp: true,
+      currentExercise: null,
+      placedBarlines: new Set(),
+      isCompleted: false,
+      isPlayingAudio: false,
+      sandboxBlocks: [],
+      slotPositions: [] // Speichert xMid für jede Lücke
+    };
+
+    /* --- Audio Synthesizer --- */
+    let audioCtx = null;
+
+    function getAudioContext() {
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      } catch(e) {}
+      return audioCtx;
+    }
+
+    function playTone(freq, durationSec, type, gainVal) {
+      if (!state.soundEnabled) return;
+      type = type || 'sine';
+      gainVal = gainVal || 0.25;
+      const ctx = getAudioContext();
+      if (!ctx || !freq) return;
+
+      try {
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(gainVal, now + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + durationSec);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + durationSec + 0.05);
+      } catch (e) {}
+    }
+
+    function playMetronomeClick(isDownbeat) {
+      if (!state.soundEnabled) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      try {
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(isDownbeat ? 1050 : 750, now);
+
+        gain.gain.setValueAtTime(isDownbeat ? 0.35 : 0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.05);
+      } catch (e) {}
+    }
+
+    function playSuccessChime() {
+      if (!state.soundEnabled) return;
+      const pitches = [261.63, 329.63, 392.00, 523.25, 659.25];
+      pitches.forEach((freq, idx) => {
+        setTimeout(() => {
+          playTone(freq, 0.45, 'triangle', 0.22);
+        }, idx * 75);
+      });
+    }
+
+    function playRetrySound() {
+      if (!state.soundEnabled) return;
+      playTone(220, 0.2, 'sine', 0.18);
+      setTimeout(() => {
+        playTone(185, 0.25, 'sine', 0.16);
+      }, 120);
+    }
+
+    /* ==========================================================================
+       SVG Noten-Renderer (100% nativ & pixelgenau)
+       ========================================================================== */
+    function renderScore() {
+      const container = document.getElementById('notation-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const exercise = state.currentExercise;
+      if (!exercise) return;
+
+      const width = Math.max(container.clientWidth || 720, 700);
+      const height = 180;
+      const staveYTop = 45;
+      const staveYBottom = 85;
+
+      container.style.width = width + 'px';
+      const pillContainer = document.getElementById('slot-buttons-row');
+      if (pillContainer) pillContainer.style.width = width + 'px';
+      const beatLabelsRow = document.getElementById('beat-labels-row');
+      if (beatLabelsRow) beatLabelsRow.style.width = width + 'px';
+
+      const noteCoordinates = renderScoreSVG(container, exercise, width, height, staveYTop, staveYBottom);
+
+      attachInteractiveSlots(container, exercise, noteCoordinates, staveYTop, staveYBottom, width, height);
+      renderBeatLabels(noteCoordinates);
+    }
+
+    function renderScoreSVG(container, exercise, width, height, yTop, yBottom) {
+      container.innerHTML = '';
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', width);
+      svg.setAttribute('height', height);
+      svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+      svg.setAttribute('style', 'overflow: visible; cursor: pointer;');
+
+      const lineSpacing = 10;
+
+      // 5 Notenlinien
+      for (let i = 0; i < 5; i++) {
+        const lineY = yTop + i * lineSpacing;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', 20);
+        line.setAttribute('y1', lineY);
+        line.setAttribute('x2', width - 20);
+        line.setAttribute('y2', lineY);
+        line.setAttribute('stroke', '#64748b');
+        line.setAttribute('stroke-width', '1.2');
+        svg.appendChild(line);
+      }
+
+      // Anfangsstrich
+      const startBar = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      startBar.setAttribute('x1', 20);
+      startBar.setAttribute('y1', yTop);
+      startBar.setAttribute('x2', 20);
+      startBar.setAttribute('y2', yBottom);
+      startBar.setAttribute('stroke', '#1e293b');
+      startBar.setAttribute('stroke-width', '2');
+      svg.appendChild(startBar);
+
+      // Violinschlüssel
+      const clef = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      clef.setAttribute('x', 28);
+      clef.setAttribute('y', yBottom - 2);
+      clef.setAttribute('font-size', '52');
+      clef.setAttribute('fill', '#1e293b');
+      clef.setAttribute('font-family', 'serif');
+      clef.textContent = '𝄞';
+      svg.appendChild(clef);
+
+      // Taktart Ziffern
+      const parts = state.currentMeter.split('/');
+      const num = parts[0];
+      const den = parts[1];
+
+      const timeTop = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      timeTop.setAttribute('x', 74);
+      timeTop.setAttribute('y', yTop + 17);
+      timeTop.setAttribute('font-family', 'Fredoka, sans-serif');
+      timeTop.setAttribute('font-size', '20');
+      timeTop.setAttribute('font-weight', '700');
+      timeTop.setAttribute('fill', '#1e293b');
+      timeTop.textContent = num;
+      svg.appendChild(timeTop);
+
+      const timeBottom = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      timeBottom.setAttribute('x', 74);
+      timeBottom.setAttribute('y', yTop + 37);
+      timeBottom.setAttribute('font-family', 'Fredoka, sans-serif');
+      timeBottom.setAttribute('font-size', '20');
+      timeBottom.setAttribute('font-weight', '700');
+      timeBottom.setAttribute('fill', '#1e293b');
+      timeBottom.textContent = den;
+      svg.appendChild(timeBottom);
+
+      // Schlussstrich
+      const endThin = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      endThin.setAttribute('x1', width - 26);
+      endThin.setAttribute('y1', yTop);
+      endThin.setAttribute('x2', width - 26);
+      endThin.setAttribute('y2', yBottom);
+      endThin.setAttribute('stroke', '#1e293b');
+      endThin.setAttribute('stroke-width', '1.5');
+      svg.appendChild(endThin);
+
+      const endThick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      endThick.setAttribute('x1', width - 21);
+      endThick.setAttribute('y1', yTop);
+      endThick.setAttribute('x2', width - 21);
+      endThick.setAttribute('y2', yBottom);
+      endThick.setAttribute('stroke', '#1e293b');
+      endThick.setAttribute('stroke-width', '4');
+      svg.appendChild(endThick);
+
+      const noteCoords = [];
+      const startX = 125;
+      const availableWidth = width - 175;
+      const step = availableWidth / (exercise.notes.length || 1);
+
+      const pitchYMap = {
+        'c/4': 95, 'd/4': 90, 'e/4': 85, 'f/4': 80,
+        'g/4': 75, 'a/4': 70, 'b/4': 65, 'c/5': 60,
+        'd/5': 55, 'e/5': 50
+      };
+
+      exercise.notes.forEach((n, idx) => {
+        const nx = startX + idx * step + step * 0.4;
+        noteCoords.push(nx);
+        const ny = pitchYMap[n.key] || 75;
+
+        const gNote = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        gNote.setAttribute('class', 'note-element note-idx-' + idx);
+
+        if (n.key === 'c/4') {
+          const ledger = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          ledger.setAttribute('x1', nx - 12);
+          ledger.setAttribute('y1', 95);
+          ledger.setAttribute('x2', nx + 12);
+          ledger.setAttribute('y2', 95);
+          ledger.setAttribute('stroke', '#64748b');
+          ledger.setAttribute('stroke-width', '1.2');
+          gNote.appendChild(ledger);
+        }
+
+        if (n.duration === 'qr') {
+          const rest = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          rest.setAttribute('x', nx - 6);
+          rest.setAttribute('y', 78);
+          rest.setAttribute('font-size', '34');
+          rest.setAttribute('fill', '#1e293b');
+          rest.textContent = '𝄽';
+          gNote.appendChild(rest);
+        } else {
+          const isWhole = n.duration === 'w';
+          const isHalf = n.duration.startsWith('h');
+          const head = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+          head.setAttribute('cx', nx);
+          head.setAttribute('cy', ny);
+          head.setAttribute('rx', isWhole ? '7.5' : '6');
+          head.setAttribute('ry', isWhole ? '5.2' : '4.5');
+          head.setAttribute('transform', 'rotate(-20 ' + nx + ' ' + ny + ')');
+
+          if (isWhole || isHalf) {
+            head.setAttribute('fill', 'white');
+            head.setAttribute('stroke', '#1e293b');
+            head.setAttribute('stroke-width', '2.2');
+          } else {
+            head.setAttribute('fill', '#1e293b');
+          }
+          gNote.appendChild(head);
+
+          if (!isWhole) {
+            const stem = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            stem.setAttribute('x1', nx + 5);
+            stem.setAttribute('y1', ny - 1);
+            stem.setAttribute('x2', nx + 5);
+            stem.setAttribute('y2', ny - 32);
+            stem.setAttribute('stroke', '#1e293b');
+            stem.setAttribute('stroke-width', '1.8');
+            gNote.appendChild(stem);
+          }
+
+          if (n.dotted) {
+            const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            dot.setAttribute('cx', nx + 12);
+            dot.setAttribute('cy', ny);
+            dot.setAttribute('r', '2.5');
+            dot.setAttribute('fill', '#1e293b');
+            gNote.appendChild(dot);
+          }
+        }
+        svg.appendChild(gNote);
+      });
+
+      // Achtelbalken
+      for (let i = 0; i < exercise.notes.length - 1; i++) {
+        if (exercise.notes[i].duration === '8' && exercise.notes[i + 1].duration === '8') {
+          const x1 = noteCoords[i] + 5;
+          const y1 = (pitchYMap[exercise.notes[i].key] || 75) - 32;
+          const x2 = noteCoords[i + 1] + 5;
+          const y2 = (pitchYMap[exercise.notes[i + 1].key] || 75) - 32;
+
+          const beam = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          beam.setAttribute('x1', x1);
+          beam.setAttribute('y1', y1);
+          beam.setAttribute('x2', x2);
+          beam.setAttribute('y2', y2);
+          beam.setAttribute('stroke', '#1e293b');
+          beam.setAttribute('stroke-width', '3.8');
+          svg.appendChild(beam);
+          i++;
+        }
+      }
+
+      container.appendChild(svg);
+      return noteCoords;
+    }
+
+    /* ==========================================================================
+       Interaktive Klickzonen
+       ========================================================================== */
+    function attachInteractiveSlots(container, exercise, noteCoords, yTop, yBottom, svgWidth, svgHeight) {
+      const svg = container.querySelector('svg');
+      if (!svg || noteCoords.length < 2) return;
+
+      const interactionGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      interactionGroup.setAttribute('id', 'slots-layer');
+
+      const pillContainer = document.getElementById('slot-buttons-row');
+      if (pillContainer) pillContainer.innerHTML = '';
+
+      state.slotPositions = [];
+
+      for (let i = 0; i < noteCoords.length - 1; i++) {
+        const xMid = (noteCoords[i] + noteCoords[i + 1]) / 2;
+        state.slotPositions[i] = xMid;
+        const isAlreadyPlaced = state.placedBarlines.has(i);
+
+        if (isAlreadyPlaced) {
+          // Gezeichneter Taktstrich
+          const placedLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          placedLine.setAttribute('class', 'placed-barline');
+          placedLine.setAttribute('x1', xMid);
+          placedLine.setAttribute('y1', yTop);
+          placedLine.setAttribute('x2', xMid);
+          placedLine.setAttribute('y2', yBottom);
+          interactionGroup.appendChild(placedLine);
+
+          if (pillContainer) {
+            const pillBtn = document.createElement('button');
+            pillBtn.className = 'slot-pill-btn placed';
+            pillBtn.style.left = xMid + 'px';
+            pillBtn.textContent = '✓ Taktstrich';
+            pillContainer.appendChild(pillBtn);
+          }
+        } else {
+          // Klickbare Zielzone im SVG
+          const slotG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          slotG.setAttribute('class', 'barline-slot');
+          slotG.setAttribute('tabindex', '0');
+          slotG.setAttribute('role', 'button');
+          slotG.setAttribute('data-slot-index', i);
+          slotG.setAttribute('aria-label', 'Taktstrich nach Note ' + (i + 1) + ' setzen');
+
+          // Großes Hitbox-Rechteck
+          const hitbox = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          hitbox.setAttribute('class', 'slot-hitbox');
+          hitbox.setAttribute('x', xMid - 28);
+          hitbox.setAttribute('y', yTop - 35);
+          hitbox.setAttribute('width', 56);
+          hitbox.setAttribute('height', (yBottom - yTop) + 70);
+          hitbox.setAttribute('rx', '8');
+          hitbox.setAttribute('fill', 'rgba(79, 70, 229, 0.001)');
+          hitbox.setAttribute('style', 'cursor: pointer;');
+          slotG.appendChild(hitbox);
+
+          // Gestrichelte Orientierungslinie
+          const guideLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          guideLine.setAttribute('class', 'slot-guide');
+          guideLine.setAttribute('x1', xMid);
+          guideLine.setAttribute('y1', yTop);
+          guideLine.setAttribute('x2', xMid);
+          guideLine.setAttribute('y2', yBottom);
+          slotG.appendChild(guideLine);
+
+          // Hover Badge
+          const badgeG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          badgeG.setAttribute('class', 'slot-badge');
+
+          const badgeBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          badgeBg.setAttribute('x', xMid - 36);
+          badgeBg.setAttribute('y', yTop - 25);
+          badgeBg.setAttribute('width', 72);
+          badgeBg.setAttribute('height', 20);
+          badgeBg.setAttribute('rx', '6');
+          badgeBg.setAttribute('fill', '#4f46e5');
+          badgeG.appendChild(badgeBg);
+
+          const badgeText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          badgeText.setAttribute('x', xMid);
+          badgeText.setAttribute('y', yTop - 11);
+          badgeText.setAttribute('text-anchor', 'middle');
+          badgeText.setAttribute('font-family', 'Fredoka, sans-serif');
+          badgeText.setAttribute('font-size', '10.5');
+          badgeText.setAttribute('font-weight', '700');
+          badgeText.setAttribute('fill', 'white');
+          badgeText.textContent = '+ Taktstrich';
+          badgeG.appendChild(badgeText);
+
+          slotG.appendChild(badgeG);
+          interactionGroup.appendChild(slotG);
+
+          // Zusätzlicher Pill-Button direkt unter der Zeile
+          if (pillContainer) {
+            const pillBtn = document.createElement('button');
+            pillBtn.className = 'slot-pill-btn';
+            pillBtn.style.left = xMid + 'px';
+            pillBtn.setAttribute('data-slot-index', i);
+            pillBtn.textContent = '➕ Hier';
+            pillBtn.title = 'Taktstrich hier setzen';
+            pillContainer.appendChild(pillBtn);
+          }
+        }
+      }
+
+      svg.appendChild(interactionGroup);
+    }
+
+    /* ==========================================================================
+       Globale Aktionen (Auf window verfügbar)
+       ========================================================================== */
+
+    window.selectMeter = function (meter) {
+      state.currentMeter = meter;
+      document.querySelectorAll('.meter-btn').forEach(function (b) {
+        b.classList.remove('active');
+        b.setAttribute('aria-checked', 'false');
+      });
+      const activeBtn = document.querySelector('.meter-btn[data-meter="' + meter + '"]');
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.setAttribute('aria-checked', 'true');
+      }
+      loadExercise(meter, state.currentLevel, 0);
+    };
+
+    window.selectLevel = function (level) {
+      state.currentLevel = level;
+      document.querySelectorAll('.level-tab').forEach(function (t) {
+        t.classList.remove('active');
+      });
+      const activeTab = document.querySelector('.level-tab[data-level="' + level + '"]');
+      if (activeTab) activeTab.classList.add('active');
+      loadExercise(state.currentMeter, level, 0);
+    };
+
+    window.nextExercise = function () {
+      loadExercise(state.currentMeter, state.currentLevel, state.exerciseIndex + 1);
+    };
+
+    window.togglePlayRhythm = function () {
+      if (state.isPlayingAudio) stopRhythm();
+      else playRhythm();
+    };
+
+    window.toggleHelp = function () {
+      state.showHelp = !state.showHelp;
+      const helpBtn = document.getElementById('toggle-help-btn');
+      if (helpBtn) {
+        helpBtn.innerHTML = '<span>💡</span> Rechenhilfe: ' + (state.showHelp ? 'An' : 'Aus');
+      }
+      renderScore();
+    };
+
+    window.toggleAudio = function () {
+      state.soundEnabled = !state.soundEnabled;
+      const audioBtn = document.getElementById('audio-toggle-btn');
+      if (audioBtn) {
+        audioBtn.textContent = state.soundEnabled ? '🔊' : '🔇';
+      }
+    };
+
+    window.handleSlotClick = function (slotIndex) {
+      if (state.isCompleted) return;
+
+      const exercise = state.currentExercise;
+      const meterConfig = EXERCISE_CATALOG[state.currentMeter];
+      const beatsPerMeasure = meterConfig.beatsPerMeasure;
+      const targetBeatsList = exercise.targetBeats || [beatsPerMeasure];
+
+      let beatsSoFar = 0;
+      for (let i = 0; i <= slotIndex; i++) {
+        beatsSoFar += exercise.notes[i].beats;
+      }
+
+      const isCorrect = targetBeatsList.includes(beatsSoFar);
+      const slotElement = document.querySelector('.barline-slot[data-slot-index="' + slotIndex + '"]');
+
+      if (isCorrect) {
+        state.placedBarlines.add(slotIndex);
+        playSuccessChime();
+        triggerConfetti(window.innerWidth / 2, window.innerHeight / 2);
+
+        const isAllPlaced = targetBeatsList.every(function (target) {
+          let sum = 0;
+          for (let i = 0; i < exercise.notes.length - 1; i++) {
+            sum += exercise.notes[i].beats;
+            if (sum === target && state.placedBarlines.has(i)) {
+              return true;
+            }
+          }
+          return false;
+        });
+
+        if (isAllPlaced) {
+          state.isCompleted = true;
+          state.score += 1;
+          state.streak += 1;
+          updateStats();
+
+          showFeedback(
+            'success',
+            '🎉 Richtig! Der ' + state.currentMeter + '-Takt ist voll!',
+            'Genau ' + formatFraction(beatsPerMeasure) + ' Schläge (' + (exercise.formula || 'Takt voll') + '). Super gerechnet!'
+          );
+
+          const nextBtn = document.getElementById('next-task-btn');
+          if (nextBtn) nextBtn.classList.add('pulse');
+
+          if (state.score === 5 || state.score === 10) {
+            setTimeout(function () {
+              showMilestoneModal(state.score);
+            }, 600);
+          }
+        } else {
+          showFeedback(
+            'success',
+            '🌟 Prima! Der 1. Taktstrich sitzt!',
+            'Jetzt fehlt noch der nächste Taktstrich für den ' + state.currentMeter + '-Takt!'
+          );
+        }
+
+        renderScore();
+
+      } else {
+        state.streak = 0;
+        updateStats();
+        playRetrySound();
+
+        if (slotElement) {
+          slotElement.classList.add('wobble');
+          setTimeout(function () {
+            slotElement.classList.remove('wobble');
+          }, 400);
+        }
+
+        let hintText = '';
+        if (beatsSoFar < beatsPerMeasure) {
+          hintText = 'Hier sind es erst ' + formatFraction(beatsSoFar) + ' Schläge. Für einen ' + state.currentMeter + '-Takt brauchst du genau ' + formatFraction(beatsPerMeasure) + ' Schläge (dir fehlen noch ' + formatFraction(beatsPerMeasure - beatsSoFar) + ')!';
+        } else if (beatsSoFar > beatsPerMeasure && beatsSoFar < (beatsPerMeasure * 2)) {
+          hintText = 'Halt, das sind schon ' + formatFraction(beatsSoFar) + ' Schläge! Ein ' + state.currentMeter + '-Takt fasst nur ' + formatFraction(beatsPerMeasure) + ' Schläge. Geh nach links zurück!';
+        } else {
+          hintText = 'Hier sind es ' + formatFraction(beatsSoFar) + ' Schläge. Zähle noch einmal genau nach!';
+        }
+
+        if (beatsSoFar % 1 !== 0) {
+          hintText += ' 💡 Tipp: Zwei Achtelnoten ergeben zusammen 1 Schlag!';
+        }
+
+        showFeedback(
+          'warning',
+          '🤔 Versuche es noch einmal! Zähle die Notenwerte zusammen:',
+          hintText
+        );
+      }
+    };
+
+    window.handleStaveAreaClick = function (e) {
+      if (state.isCompleted) return;
+      const container = document.getElementById('notation-container');
+      if (!container || !state.slotPositions || state.slotPositions.length === 0) return;
+
+      const rect = container.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+
+      let bestSlotIdx = -1;
+      let minDist = 99999;
+
+      for (let i = 0; i < state.slotPositions.length; i++) {
+        const dist = Math.abs(clickX - state.slotPositions[i]);
+        if (dist < minDist) {
+          minDist = dist;
+          bestSlotIdx = i;
+        }
+      }
+
+      if (bestSlotIdx !== -1 && minDist < 90) {
+        window.handleSlotClick(bestSlotIdx);
+      }
+    };
+
+    window.addSandboxNote = function (beats, name) {
+      const beatsPerMeasure = EXERCISE_CATALOG[state.currentMeter].beatsPerMeasure;
+      const currentSum = state.sandboxBlocks.reduce(function (acc, b) { return acc + b.beats; }, 0);
+
+      if (currentSum + beats > beatsPerMeasure) {
+        const statusText = document.getElementById('sandbox-status-text');
+        statusText.textContent = '⚠️ Hoppla! Das wären ' + formatFraction(currentSum + beats) + ' Schläge! Ein ' + state.currentMeter + '-Takt fasst nur genau ' + formatFraction(beatsPerMeasure) + ' Schläge!';
+        statusText.style.color = '#dc2626';
+        setTimeout(function () {
+          updateSandboxUI();
+        }, 2400);
+        return;
+      }
+
+      let blockClass = 'block-quarter';
+      if (beats === 2) blockClass = 'block-half';
+      if (beats === 3) blockClass = 'block-dotted-half';
+      if (beats === 4) blockClass = 'block-whole';
+      if (name.indexOf('Achtel') !== -1) blockClass = 'block-eighth';
+      if (name.indexOf('Pause') !== -1) blockClass = 'block-rest';
+
+      state.sandboxBlocks.push({ beats: beats, name: name, blockClass: blockClass });
+      playTone(392 + currentSum * 35, 0.25, 'triangle', 0.2);
+      updateSandboxUI();
+    };
+
+    window.resetSandbox = function () {
+      state.sandboxBlocks = [];
+      updateSandboxUI();
+    };
+
+    window.closeModal = function () {
+      const modal = document.getElementById('milestone-modal');
+      if (modal) modal.classList.remove('active');
+      window.nextExercise();
+    };
+
+    /* ==========================================================================
+       Hilfsfunktionen
+       ========================================================================== */
+    function formatFraction(val) {
+      if (val === 0.5) return '½';
+      if (val === 1.5) return '1 ½';
+      if (val === 2.5) return '2 ½';
+      if (val === 3.5) return '3 ½';
+      return val.toString();
+    }
+
+    function showFeedback(type, title, detail) {
+      const banner = document.getElementById('feedback-banner');
+      const icon = document.getElementById('feedback-icon');
+      const titleEl = document.getElementById('feedback-title');
+      const detailEl = document.getElementById('feedback-detail');
+
+      banner.className = 'feedback-banner ' + type;
+      if (type === 'success') icon.textContent = '🎉';
+      else if (type === 'warning') icon.textContent = '🤔';
+      else icon.textContent = '💡';
+
+      titleEl.textContent = title;
+      detailEl.textContent = detail;
+    }
+
+    function renderBeatLabels(noteCoords) {
+      const row = document.getElementById('beat-labels-row');
+      if (!row) return;
+      row.innerHTML = '';
+
+      if (!state.showHelp && !state.isCompleted) {
+        row.style.display = 'none';
+        return;
+      }
+      row.style.display = 'flex';
+
+      const exercise = state.currentExercise;
+      const beatsPerMeasure = EXERCISE_CATALOG[state.currentMeter].beatsPerMeasure;
+      let beatTracker = 0;
+
+      exercise.notes.forEach(function (n, idx) {
+        const chip = document.createElement('div');
+        chip.className = 'beat-chip';
+        chip.id = 'beat-chip-' + idx;
+
+        const startBeat = (beatTracker % beatsPerMeasure) + 1;
+        const endBeat = startBeat + n.beats - (n.beats === 0.5 ? 0.5 : 1);
+        beatTracker += n.beats;
+
+        if (n.duration === 'qr') {
+          chip.textContent = 'Pause (' + n.beats + ')';
+        } else if (n.beats === 0.5) {
+          chip.textContent = '½';
+        } else if (n.beats === 1) {
+          chip.textContent = startBeat + '.';
+        } else if (n.beats === 2 || n.beats === 3) {
+          chip.textContent = startBeat + '.-' + endBeat + '.';
+        } else if (n.beats === 4) {
+          chip.textContent = '1.-4.';
+        } else {
+          chip.textContent = n.beats.toString();
+        }
+
+        row.appendChild(chip);
+      });
+    }
+
+    function playRhythm() {
+      if (state.isPlayingAudio) return;
+      state.isPlayingAudio = true;
+
+      const playBtn = document.getElementById('play-rhythm-btn');
+      if (playBtn) playBtn.innerHTML = '<span>⏹️</span> Stoppen';
+
+      const exercise = state.currentExercise;
+      const beatsPerMeasure = EXERCISE_CATALOG[state.currentMeter].beatsPerMeasure;
+      const bpm = state.currentMeter === '6/8' ? 110 : (state.currentMeter === '2/4' ? 88 : 80);
+      const beatSec = (60 / bpm) * (state.currentMeter === '6/8' ? 0.5 : 1.0);
+
+      let currentTimeOffset = 0;
+      const countInBeats = state.currentMeter === '6/8' ? 6 : Math.round(beatsPerMeasure);
+
+      for (let c = 0; c < countInBeats; c++) {
+        (function (tickIndex, offset) {
+          setTimeout(function () {
+            if (!state.isPlayingAudio) return;
+            playMetronomeClick(tickIndex === 0);
+          }, offset * 1000);
+        })(c, currentTimeOffset);
+        currentTimeOffset += beatSec;
+      }
+
+      exercise.notes.forEach(function (n, idx) {
+        const noteDurationSec = n.beats * beatSec;
+        const isRest = n.duration.indexOf('r') !== -1;
+        const freq = PITCH_FREQUENCIES[n.key] || 392.0;
+
+        (function (noteIdx, offset, duration, freqVal, restFlag) {
+          setTimeout(function () {
+            if (!state.isPlayingAudio) return;
+
+            highlightNoteElement(noteIdx, true);
+            playMetronomeClick(false);
+
+            if (!restFlag) {
+              playTone(freqVal, duration * 0.9, 'triangle', 0.28);
+            }
+
+            setTimeout(function () {
+              highlightNoteElement(noteIdx, false);
+            }, duration * 900);
+
+          }, offset * 1000);
+        })(idx, currentTimeOffset, noteDurationSec, freq, isRest);
+
+        currentTimeOffset += noteDurationSec;
+      });
+
+      setTimeout(function () {
+        stopRhythm();
+      }, currentTimeOffset * 1000 + 100);
+    }
+
+    function stopRhythm() {
+      state.isPlayingAudio = false;
+      const playBtn = document.getElementById('play-rhythm-btn');
+      if (playBtn) playBtn.innerHTML = '<span>🎵</span> Takt anhören';
+      document.querySelectorAll('.beat-chip').forEach(function (el) { el.classList.remove('active-beat'); });
+      document.querySelectorAll('.note-element').forEach(function (el) { el.classList.remove('note-highlight'); });
+    }
+
+    function highlightNoteElement(idx, isActive) {
+      const chip = document.getElementById('beat-chip-' + idx);
+      if (chip) {
+        if (isActive) chip.classList.add('active-beat');
+        else chip.classList.remove('active-beat');
+      }
+
+      const noteEl = document.querySelector('.note-idx-' + idx);
+      if (noteEl) {
+        if (isActive) noteEl.classList.add('note-highlight');
+        else noteEl.classList.remove('note-highlight');
+      }
+    }
+
+    function loadExercise(meter, level, index) {
+      stopRhythm();
+      state.currentMeter = meter;
+      state.currentLevel = level;
+      state.placedBarlines.clear();
+      state.isCompleted = false;
+
+      const meterConfig = EXERCISE_CATALOG[meter] || EXERCISE_CATALOG['4/4'];
+      const list = (meterConfig.levels && meterConfig.levels[level]) ? meterConfig.levels[level] : meterConfig.levels[1];
+      state.exerciseIndex = index % list.length;
+      state.currentExercise = list[state.exerciseIndex];
+
+      updateInstructions(meterConfig);
+
+      const taskInd = document.getElementById('task-indicator');
+      if (taskInd) taskInd.textContent = 'Aufgabe ' + (state.exerciseIndex + 1) + ' von ' + list.length;
+
+      const missingCount = level === 4 ? 2 : 1;
+      const missInfo = document.getElementById('missing-info');
+      if (missInfo) missInfo.textContent = '📍 ' + missingCount + ' Taktstrich' + (missingCount > 1 ? 'e fehlen' : ' fehlt') + '!';
+
+      const nextBtn = document.getElementById('next-task-btn');
+      if (nextBtn) nextBtn.classList.remove('pulse');
+
+      showFeedback(
+        'neutral',
+        'Finde die ' + meterConfig.countRule + '!',
+        'Klicke zwischen die Noten auf die Notenlinien oder auf die Buttons darunter!'
+      );
+
+      updateCheatSheetForMeter(meter);
+      renderScore();
+    }
+
+    function updateInstructions(meterConfig) {
+      const titleEl = document.getElementById('instruction-title');
+      if (titleEl) titleEl.textContent = '🎯 Klicke genau dorthin, wo der Taktstrich für den ' + meterConfig.meterName + ' hingehört!';
+
+      const textEl = document.getElementById('instruction-text');
+      if (textEl) textEl.innerHTML = 'Zähle die Notenwerte von links nach rechts zusammen. Sobald genau <strong>' + meterConfig.countRule + '</strong> erreicht sind, ist der Takt voll und der Taktstrich gehört genau dorthin!';
+
+      const stepEl = document.getElementById('step-target');
+      if (stepEl) stepEl.textContent = '2️⃣ Genau ' + meterConfig.countRule + ' finden';
+    }
+
+    function updateCheatSheetForMeter(meter) {
+      const tag = document.getElementById('cheat-sheet-meter-tag');
+      if (tag) tag.textContent = meter + '-Takt';
+
+      const headTitle = document.getElementById('sandbox-header-title');
+      if (headTitle) headTitle.textContent = '🧩 Interaktiver Takt-Baukasten: Baue deinen ' + meter + '-Takt';
+
+      const dottedCard = document.getElementById('card-dotted-half');
+      const wholeBtn = document.getElementById('sandbox-add-whole');
+      const dottedBtn = document.getElementById('sandbox-add-dotted-half');
+
+      if (meter === '3/4') {
+        if (dottedCard) dottedCard.classList.add('highlight-note');
+        if (wholeBtn) wholeBtn.style.opacity = '0.35';
+        if (dottedBtn) dottedBtn.style.display = 'inline-flex';
+      } else if (meter === '2/4') {
+        if (dottedCard) dottedCard.classList.remove('highlight-note');
+        if (wholeBtn) wholeBtn.style.opacity = '0.35';
+        if (dottedBtn) dottedBtn.style.opacity = '0.35';
+      } else {
+        if (dottedCard) dottedCard.classList.remove('highlight-note');
+        if (wholeBtn) wholeBtn.style.opacity = '1';
+        if (dottedBtn) dottedBtn.style.display = 'inline-flex';
+      }
+
+      window.resetSandbox();
+    }
+
+    function updateStats() {
+      const sc = document.getElementById('score-counter');
+      if (sc) sc.textContent = state.score.toString();
+      const st = document.getElementById('streak-counter');
+      if (st) st.textContent = state.streak.toString();
+    }
+
+    function updateSandboxUI() {
+      const bar = document.getElementById('sandbox-measure-bar');
+      const statusText = document.getElementById('sandbox-status-text');
+      if (!bar || !statusText) return;
+
+      bar.innerHTML = '';
+      const beatsPerMeasure = EXERCISE_CATALOG[state.currentMeter].beatsPerMeasure;
+      let total = 0;
+
+      state.sandboxBlocks.forEach(function (block) {
+        total += block.beats;
+        const div = document.createElement('div');
+        div.className = 'beat-block ' + block.blockClass;
+        div.style.width = ((block.beats / beatsPerMeasure) * 100) + '%';
+        div.textContent = block.name;
+        bar.appendChild(div);
+      });
+
+      statusText.style.color = '#475569';
+      if (total === beatsPerMeasure) {
+        statusText.textContent = '🎉 Perfekt! Der ' + state.currentMeter + '-Takt ist voll (' + formatFraction(beatsPerMeasure) + ' von ' + formatFraction(beatsPerMeasure) + ' Schlägen)!';
+        statusText.style.color = '#059669';
+        playSuccessChime();
+      } else if (total === 0) {
+        statusText.textContent = 'Aktuell: 0 von ' + formatFraction(beatsPerMeasure) + ' Schlägen gefüllt. Klicke auf die Bausteine!';
+      } else {
+        statusText.textContent = 'Aktuell: ' + formatFraction(total) + ' von ' + formatFraction(beatsPerMeasure) + ' Schlägen. Es fehlen noch ' + formatFraction(beatsPerMeasure - total) + '!';
+      }
+    }
+
+    function triggerConfetti(originX, originY) {
+      const canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
+      canvas.style.display = 'block';
+
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ['#f59e0b', '#10b981', '#6366f1', '#ec4899', '#3b82f6'];
+      const particles = [];
+
+      for (let i = 0; i < 45; i++) {
+        particles.push({
+          x: originX || window.innerWidth / 2,
+          y: originY || window.innerHeight / 2,
+          vx: (Math.random() - 0.5) * 12,
+          vy: (Math.random() - 0.7) * 14,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 10,
+          opacity: 1
+        });
+      }
+
+      function updateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let stillAlive = false;
+
+        particles.forEach(function (p) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.35;
+          p.rotation += p.rotSpeed;
+          p.opacity -= 0.018;
+
+          if (p.opacity > 0) {
+            stillAlive = true;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.opacity;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            ctx.restore;
+          }
+        });
+
+        if (stillAlive) {
+          requestAnimationFrame(updateConfetti);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          canvas.style.display = 'none';
+        }
+      }
+      updateConfetti();
+    }
+
+    function showMilestoneModal(stars) {
+      const modal = document.getElementById('milestone-modal');
+      const title = document.getElementById('modal-title');
+      const desc = document.getElementById('modal-desc');
+
+      if (title) title.textContent = '🌟 ' + stars + ' Sterne gesammelt!';
+      if (desc) desc.textContent = 'Klasse! Du meisterst die Taktarten schon wie eine echte Musik-Meisterin! Weiter so!';
+
+      if (modal) modal.classList.add('active');
+      playSuccessChime();
+      triggerConfetti(window.innerWidth / 2, window.innerHeight / 2);
+    }
+
+    /* ==========================================================================
+       Globales Event-Delegation-System (Fängt jeden Klick garantiert ab)
+       ========================================================================== */
+    let totalClicks = 0;
+
+    function logAction(txt) {
+      const el = document.getElementById('debug-last-action');
+      if (el) el.textContent = txt;
+    }
+
+    function spawnRipple(x, y) {
+      try {
+        const ripple = document.createElement('div');
+        ripple.className = 'click-ripple';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        document.body.appendChild(ripple);
+        setTimeout(function () {
+          if (ripple.parentNode) ripple.parentNode.removeChild(ripple);
+        }, 400);
+      } catch (e) {}
+    }
+
+    document.addEventListener('click', function (e) {
+      totalClicks++;
+      const counterEl = document.getElementById('debug-click-count');
+      if (counterEl) counterEl.textContent = totalClicks.toString();
+      spawnRipple(e.clientX, e.clientY);
+
+      // 1. Taktart-Buttons (.meter-btn)
+      const meterBtn = e.target.closest('.meter-btn');
+      if (meterBtn) {
+        const meter = meterBtn.getAttribute('data-meter');
+        if (meter) {
+          window.selectMeter(meter);
+          logAction('Taktart: ' + meter + ' gewählt');
+        }
+        return;
+      }
+
+      // 2. Stufen-Buttons (.level-tab)
+      const levelTab = e.target.closest('.level-tab');
+      if (levelTab) {
+        const lvl = parseInt(levelTab.getAttribute('data-level'), 10);
+        if (!isNaN(lvl)) {
+          window.selectLevel(lvl);
+          logAction('Stufe ' + lvl + ' gewählt');
+        }
+        return;
+      }
+
+      // 3. Audio-Toggle (#audio-toggle-btn)
+      const audioBtn = e.target.closest('#audio-toggle-btn');
+      if (audioBtn) {
+        window.toggleAudio();
+        logAction('Ton: ' + (state.soundEnabled ? 'Ein' : 'Aus'));
+        return;
+      }
+
+      // 4. Rhythmus abspielen (#play-rhythm-btn)
+      const playBtn = e.target.closest('#play-rhythm-btn');
+      if (playBtn) {
+        window.togglePlayRhythm();
+        logAction('Rhythmus abgespielt');
+        return;
+      }
+
+      // 5. Rechenhilfe (#toggle-help-btn)
+      const helpBtn = e.target.closest('#toggle-help-btn');
+      if (helpBtn) {
+        window.toggleHelp();
+        logAction('Rechenhilfe umgeschaltet');
+        return;
+      }
+
+      // 6. Nächste Aufgabe (#next-task-btn)
+      const nextBtn = e.target.closest('#next-task-btn');
+      if (nextBtn) {
+        window.nextExercise();
+        logAction('Nächste Aufgabe geladen');
+        return;
+      }
+
+      // 7. Pill-Button (.slot-pill-btn)
+      const pillBtn = e.target.closest('.slot-pill-btn');
+      if (pillBtn && !pillBtn.classList.contains('placed')) {
+        const slotIdx = parseInt(pillBtn.getAttribute('data-slot-index'), 10);
+        if (!isNaN(slotIdx)) {
+          window.handleSlotClick(slotIdx);
+          logAction('Taktstrich nach Note ' + (slotIdx + 1) + ' geklickt');
+        }
+        return;
+      }
+
+      // 8. Taktstrich-Zone im SVG (.barline-slot)
+      const slotEl = e.target.closest('.barline-slot');
+      if (slotEl) {
+        const slotIdx = parseInt(slotEl.getAttribute('data-slot-index'), 10);
+        if (!isNaN(slotIdx)) {
+          window.handleSlotClick(slotIdx);
+          logAction('Taktstrich nach Note ' + (slotIdx + 1) + ' geklickt');
+        }
+        return;
+      }
+
+      // 9. Klick auf den Notenbereich (automatisch nächsten Slot finden)
+      const sheetArea = e.target.closest('#sheet-wrapper');
+      if (sheetArea && !e.target.closest('.slot-pill-btn')) {
+        window.handleStaveAreaClick(e);
+        logAction('Auf Notenzeile geklickt');
+        return;
+      }
+
+      // 10. Baukasten Leeren (.sandbox-reset-btn)
+      const resetBtn = e.target.closest('.sandbox-reset-btn');
+      if (resetBtn) {
+        window.resetSandbox();
+        logAction('Takt-Baukasten geleert');
+        return;
+      }
+
+      // 11. Baukasten Bausteine (.sandbox-chip-btn)
+      const chipBtn = e.target.closest('.sandbox-chip-btn');
+      if (chipBtn) {
+        const beats = parseFloat(chipBtn.getAttribute('data-beats'));
+        const name = chipBtn.getAttribute('data-name');
+        if (!isNaN(beats) && name) {
+          window.addSandboxNote(beats, name);
+          logAction('Baustein: ' + name);
+        }
+        return;
+      }
+
+      // 12. Noten-Karten Spickzettel (.note-card)
+      const noteCard = e.target.closest('.note-card');
+      if (noteCard) {
+        const beats = parseFloat(noteCard.getAttribute('data-beats'));
+        const name = noteCard.getAttribute('data-name');
+        if (!isNaN(beats) && name) {
+          window.addSandboxNote(beats, name);
+          logAction('Notenkarte: ' + name);
+        }
+        return;
+      }
+
+      // 13. Urkunde Weiter (.modal-card button)
+      const modalBtn = e.target.closest('#modal-close-btn');
+      if (modalBtn) {
+        window.closeModal();
+        logAction('Urkunde geschlossen');
+        return;
+      }
+    });
+
+    /* Initialisierung */
+    let isInitialized = false;
+    function init() {
+      if (isInitialized) return;
+      isInitialized = true;
+      try {
+        loadExercise('4/4', 1, 0);
+      } catch (e) {
+        console.error("Initial load error:", e);
+      }
+
+      let resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          renderScore();
+        }, 150);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: takt-meisterin
+    env: static
+    buildCommand: ""
+    staticPublishPath: .
